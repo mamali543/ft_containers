@@ -30,19 +30,17 @@ class vector
                 return("index outofbounds");
             }
     };
-    explicit vector (const allocator_type& alloc = allocator_type()): _capacity(0), p(NULL), _size(0)
+    explicit vector (const allocator_type& alloc = allocator_type()): _capacity(0), p(NULL), _size(0), allocc(alloc)
     {
 
     }
 
-    explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()): _size(n), p(NULL), allocc(alloc), _capacity(n)
+    explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()): _size(0), p(NULL), allocc(alloc), _capacity(0)
     {
-        size_type i;
-        p = allocc.allocate(n);
-        for (i = 0; i < n; i++)
-        {
-            allocc.construct(&p[i], val);
-        }
+        reserve(n);
+        for (size_type i = 0; i < n; ++i)
+            p[i] = val;
+        _size = n;
     }
 
     vector (const vector& x) : p(NULL), allocc(x.allocc)
@@ -53,13 +51,15 @@ class vector
     vector& operator= (const vector& x)
     {
         size_type i;
-        if (_size != 0)
-            allocc.deallocate(p, _size);
-        _size = x._size;
-        p = allocc.allocate(_size);
-        for (i = 0; i < _size; i++)
+        if (*this != x)
         {
-            allocc.construct(&p[i], x[i]);
+            if (_size != 0)
+                allocc.deallocate(p, _size);
+            _size = x._size;
+            _capacity = x._capacity;
+            p = allocc.allocate(_capacity);
+            for (i = 0; i < _size; i++)
+                p[i] = x.p[i];
         }
         return (*this);
     }
@@ -95,7 +95,6 @@ class vector
 
     void reserve (size_type n)
     {
-        std::cout << n << std::endl;
         pointer tmp;
         size_type   i;
         tmp = p;
@@ -108,8 +107,8 @@ class vector
                 tmp[i] = p[i];
             allocc.deallocate(p, _size);
             p = tmp;
+            _capacity = n;
         }
-        _capacity = n;
     }
 
     void resize (size_type n, value_type val = value_type())
@@ -120,10 +119,10 @@ class vector
         if (n < _size)
         {
             for (i = n; i < _size ; i++)
-                allocc.destroy(p + i);
+                allocc.destroy(&p[i]);
             _size = n;
         }
-        else if (n > 0)
+        else if (n > _capacity)
         {
             p = allocc.allocate(n);
             for (i = 0; i < n; i++)
@@ -141,7 +140,7 @@ class vector
         }
         else
             _size = n;
-            p = NULL;
+        p = NULL;
     }
 
 /*------------------Element access-------------------------*/

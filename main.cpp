@@ -1,19 +1,27 @@
-#include <iostream>
-#include <array>
-#include <memory>
+
 #include <vector>
+#include "./header.hpp"
+using namespace std;
 
-template <class T>
-void ll(T y)
+int main ()
 {
-    std::cout << y << std::endl;
-}
+  std::vector<int> vect;
 
-int     main()
-{
-    std::allocator<int> p;
-    int *tmp = p.allocate(1);
-    p.construct(tmp, 88);
-    ll(*tmp);
 
+  for (int i=0; i<100; i++) vect.push_back(i);
+
+  std::cout << "size: " << (int) vect.size() << '\n';
+  std::cout << "capacity: " << (int) vect.capacity() << '\n';
+  std::cout << "max_size: " << (int) vect.max_size() << '\n';
+
+  /*-------------         ------------ ------------- ------------      -------------*/
+
+  ft::vector<int> myvector;
+  for (int i=0; i<100; i++) myvector.push_back(i);
+
+std::cout << "size: " << (int) myvector.size() << '\n';
+  std::cout << "capacity: " << (int) myvector.capacity() << '\n';
+  std::cout << "max_size: " << (int) myvector.max_size() << '\n';
+
+  return 0;
 }

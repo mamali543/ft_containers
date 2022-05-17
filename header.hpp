@@ -2,6 +2,7 @@
 #include <array>
 #include <memory>
 
+
 namespace ft
 {
 template < class T, class Alloc = std::allocator<T> >
@@ -12,13 +13,13 @@ class vector
     typedef Alloc 										allocator_type;
     typedef value_type&                            	  	reference;
     typedef const value_type&                       	const_reference;
-    typedef typename __alloc_traits::pointer        	pointer;
-    typedef typename __alloc_traits::const_pointer   	const_pointer;
+    typedef T *pointer;
+    // typedef typename __alloc_traits::const_pointer   	const_pointer;
     typedef std::size_t 								size_type;
     private:
-        size_type value;
-        size_type size;
-        value_type *p;
+        size_type _capacity;
+        size_type _size;
+        pointer p;
         allocator_type allocc;
     public:
 
@@ -29,22 +30,22 @@ class vector
                 return("index outofbounds");
             }
     };
-    explicit vector (const allocator_type& alloc = allocator_type()): value(0), p(NULL), size(0)
+    explicit vector (const allocator_type& alloc = allocator_type()): _capacity(0), p(NULL), _size(0)
     {
 
     }
 
-    explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()): size(n), p(NULL), allocc(alloc)
+    explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()): _size(n), p(NULL), allocc(alloc), _capacity(n)
     {
         size_type i;
         p = allocc.allocate(n);
         for (i = 0; i < n; i++)
         {
-            p.construct(&p[i], val);
+            allocc.construct(&p[i], val);
         }
     }
 
-    Vector (const Vector& x) : p(NULl), allocc(x.allocc)
+    vector (const vector& x) : p(NULL), allocc(x.allocc)
 	{
 		*this = x;
 	}
@@ -52,26 +53,26 @@ class vector
     vector& operator= (const vector& x)
     {
         size_type i;
-        if (size != 0)
-            allocc.deallocate(p, size);
-        size = x.size;
-        p = allocc.allocate(size);
-        for (i = 0; i < size; i++)
+        if (_size != 0)
+            allocc.deallocate(p, _size);
+        _size = x._size;
+        p = allocc.allocate(_size);
+        for (i = 0; i < _size; i++)
         {
-            p.construct(&p[i], x[i]);
+            allocc.construct(&p[i], x[i]);
         }
         return (*this);
     }
 
     ~vector()
     {
-        if (size != 0)
-            allocc.deallocate(p, size);
+        if (_size != 0)
+            allocc.deallocate(p, _size);
     }
 
     size_type size() const
     {
-        retunr (size);
+        return (_size);
     }
 
     size_type max_size() const
@@ -81,12 +82,12 @@ class vector
 
     size_type capacity() const
     {
-        return (size);
+        return (_capacity);
     }
 
     bool empty() const
 	{
-		if (size == 0)
+		if (_size == 0)
 			return (1);
 		else
 			return 0;
@@ -94,58 +95,60 @@ class vector
 
     void reserve (size_type n)
     {
-        value_type *tmp;
+        std::cout << n << std::endl;
+        pointer tmp;
         size_type   i;
-        tmp = p
-        if (n > size)
+        tmp = p;
+        if (n > max_size())
+            throw std::length_error("length error");
+        else if (n > _capacity)
         {
-            p = allocc.allocate(p, n);
-            for (i = 0; i < n; i++)
-            {
-                allocc.construct(&p[i], tmp[i]);
-            }
-            if (size > 0)
-                allocc.deallocate(tmp, size);
-            size = n;
+            pointer tmp = allocc.allocate(n);
+            for (i = 0; i < _size ; i++)
+                tmp[i] = p[i];
+            allocc.deallocate(p, _size);
+            p = tmp;
         }
+        _capacity = n;
     }
 
     void resize (size_type n, value_type val = value_type())
     {
         size_type   i;
-        value_type  *tmp;
-        tmp = p
-        if (n < size)
+        pointer tmp;
+        tmp = p;
+        if (n < _size)
         {
-            for (i = 0; i < n ; i++)
-            {
-                allocc.construct(&p[i], val);
-            }
+            for (i = n; i < _size ; i++)
+                allocc.destroy(p + i);
+            _size = n;
         }
         else if (n > 0)
         {
             p = allocc.allocate(n);
             for (i = 0; i < n; i++)
             {
-                if (i < size)
+                if (i < _size)
                 {
                     allocc.construct(&p[i], tmp[i]);
                 }
                 else
                     allocc.construct(&p[i], val);
             }
-            if (size > 0)
-                allocc.deallocate(tmp, size);
-            size = n;
+            if (_size > 0)
+                allocc.deallocate(tmp, _size);
+            _size = n;
         }
         else
+            _size = n;
             p = NULL;
-        value = n;
     }
+
 /*------------------Element access-------------------------*/
+
     reference at (size_type n)
     {
-        if (n < size && n >= 0)
+        if (n < _size && n >= 0)
             return (p[n]);
         throw outofbounds();
 
@@ -153,8 +156,8 @@ class vector
 
     const_reference at (size_type _n) const
 	{
-		if (_n < size)
-			return (p[n]);
+		if (_n < _size && _n >= 0)
+			return (p[_n]);
 		throw outofbounds();
 	}
 
@@ -179,15 +182,44 @@ class vector
 
     reference back()
     {
-        return (p[size - 1]);
+        return (p[_size - 1]);
     }
 
     const_reference back() const
     {
-        return (p[size - 1]);
+        return (p[_size - 1]);
     }
+
 /*------------------Modifiers-------------------------*/
 
+    void clear()
+    {
+        _size = 0;
+    }
+
+    void swap (vector& x)
+    {
+        pointer tmp;
+        size_type   i;
+        size_type   j;
+
+        tmp = x.p;
+        x.p = p;
+        i = _size;
+        j = _capacity;
+        _size = x._size;
+        _capacity = x._capacity;
+        p = tmp;
+        x._size = i;
+        x._capacity = j;
+    }
+
+    void push_back(const value_type &val)
+    {
+        if (_size + 1 > _capacity)
+            reserve(!_capacity   ? 1 : _capacity * 2);
+        p[_size++] = val;
+    }
 };
 }
 

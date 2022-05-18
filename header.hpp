@@ -30,6 +30,8 @@ class vector
                 return("index outofbounds");
             }
     };
+
+    /*---------------------------- Constructors -------------------------*/
     explicit vector (const allocator_type& alloc = allocator_type()): _capacity(0), p(NULL), _size(0), allocc(alloc)
     {
 
@@ -47,28 +49,29 @@ class vector
 	{
 		*this = x;
 	}
+    /*---------------------------- Assignement operator -------------------------*/
     
     vector& operator= (const vector& x)
     {
         size_type i;
-        if (*this != x)
-        {
-            if (_size != 0)
-                allocc.deallocate(p, _size);
-            _size = x._size;
-            _capacity = x._capacity;
-            p = allocc.allocate(_capacity);
-            for (i = 0; i < _size; i++)
-                p[i] = x.p[i];
-        }
+        if (_size != 0)
+            allocc.deallocate(p, _size);
+        _size = x._size;
+        _capacity = x._capacity;
+        p = allocc.allocate(_capacity);
+        for (i = 0; i < _size; i++)
+            p[i] = x.p[i];
         return (*this);
     }
+    /*---------------------------- Destructor -------------------------*/
 
     ~vector()
     {
         if (_size != 0)
             allocc.deallocate(p, _size);
     }
+
+    /*---------------------------- Capacity -------------------------*/
 
     size_type size() const
     {
@@ -124,30 +127,23 @@ class vector
         }
         else if (n > _capacity)
         {
-            p = allocc.allocate(n);
-            for (i = 0; i < n; i++)
-            {
-                if (i < _size)
-                {
-                    allocc.construct(&p[i], tmp[i]);
-                }
-                else
-                    allocc.construct(&p[i], val);
-            }
-            if (_size > 0)
-                allocc.deallocate(tmp, _size);
-            _size = n;
+            if (n > (_capacity * 2))
+                reserve(n);
+            else
+                reserve(_capacity * 2);
+            for (i = _size; i < n ; i++)
+                push_back(val);
         }
-        else
-            _size = n;
-        p = NULL;
+        else if (n > _size)
+            for (i = _size; i < n; i++)
+                push_back(val);
     }
 
-/*------------------Element access-------------------------*/
+    /*---------------------------- Element access -------------------------*/
 
     reference at (size_type n)
     {
-        if (n < _size && n >= 0)
+        if (n < _size)
             return (p[n]);
         throw outofbounds();
 
@@ -155,7 +151,7 @@ class vector
 
     const_reference at (size_type _n) const
 	{
-		if (_n < _size && _n >= 0)
+		if (_n < _size)
 			return (p[_n]);
 		throw outofbounds();
 	}
@@ -193,24 +189,18 @@ class vector
 
     void clear()
     {
+        for (size_type i = 0; i < _size; i++)
+            allocc.destroy(&p[i]);
         _size = 0;
     }
 
     void swap (vector& x)
     {
-        pointer tmp;
-        size_type   i;
-        size_type   j;
+        vector  tmp;
 
-        tmp = x.p;
-        x.p = p;
-        i = _size;
-        j = _capacity;
-        _size = x._size;
-        _capacity = x._capacity;
-        p = tmp;
-        x._size = i;
-        x._capacity = j;
+        tmp = *this;
+        *this = x;
+        x = tmp;
     }
 
     void push_back(const value_type &val)
@@ -219,6 +209,50 @@ class vector
             reserve(!_capacity   ? 1 : _capacity * 2);
         p[_size++] = val;
     }
+
+    void pop_back()
+    {
+        allocc.destroy(&p[_size]);
+        _size--;
+    }
+
+/*------------------ Iterators -------------------------*/
+
+    // iterator begin()
+    // {
+    //     return (p);
+    // }
+
+    // const_iterator begin() const
+    // {
+    //     return (p);
+    // }
+
+    // iterator end()
+    // {
+    //     return (p + _size);
+    // }
+
+    // const_iterator end() const
+    // {
+    //     return (p + _size);
+    // }
+
+/*------------------ Allocator -------------------------*/
+
+    allocator_type get_allocator() const
+    {
+        return (allocc);
+    }
+
+/*------------------ No member functions overload -------------------------*/
+
+template <class T, class Alloc>
+  void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
+  {
+      x.swap(y);
+  };
+
 };
 }
 

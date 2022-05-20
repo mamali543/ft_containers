@@ -2,32 +2,49 @@
 #include <vector>
 #include "./vector.hpp"
 #include "./iterator.hpp"
+#include "./revers_iterator.hpp"
 // #include <iterator>
 using namespace std;
 
 
 int main ()
 {
-    vector<int> ar ;
-    for (int i = 0; i < 10; i++)
-      ar.push_back(i);
-    ar.push_back(90);
-      
-    // Declaring iterator to a vector
-    vector<int>::iterator ptr;
-      
-    // Displaying vector elements using begin() and end()
-    cout << "The vector elements are : ";
-    for (ptr = ar.begin(); ptr < ar.end(); ptr++)
-        cout << *ptr << " ";
-    ft::vector<int> p;
-    for (int i = 0; i < 10; i++)
-      p.push_back(i);
-    ft::vector<int>::iterator pt = p.begin();
-    ft::vector<int>::iterator tp(p.end());
-    tp = tp - 5;
-  cout <<  "\n" << *tp << endl;
-    for (pt = p.begin(); pt < p.end(); pt++)
-        cout << *pt << " ";
+  std::vector<int> myvector;
+  for (int i=0; i<10; i++) myvector.push_back(i);
+
+  typedef std::vector<int>::iterator iter_type;
+                                                         // ? 0 1 2 3 4 5 6 7 8 9 ?
+  iter_type from (myvector.begin());                     //   ^
+                                                         //         ------>
+  iter_type until (myvector.end());                      //                       ^
+                                                         //
+  std::reverse_iterator<iter_type> rev_until (from);     // ^
+                                                         //         <------
+  std::reverse_iterator<iter_type> rev_from (until);     //                     ^
+
+  std::cout << "myvector:";
+  while (rev_from != rev_until)
+    std::cout << ' ' << *rev_from++;
+  std::cout << '\n';
+
+
+
+  ft::vector<int> vect;
+  for (int i=0; i<10; i++) vect.push_back(i);
+
+  typedef ft::vector<int>::iterator iterr_type;
+                                                         // ? 0 1 2 3 4 5 6 7 8 9 ?
+  iterr_type froom(vect.begin());                     //   ^
+                                                         //         ------>
+  iterr_type untiil(vect.end());                      //                       ^
+                                                         //
+  ft::reverse_iterator<iterr_type> rev_untiil(froom);     // ^
+                                                         //         <------
+  ft::reverse_iterator<iterr_type> rev_froom(untiil);     //                     ^
+
+  std::cout << "vect:";
+  while (rev_froom != rev_untiil)
+    std::cout << ' ' << *rev_froom++;
+  std::cout << '\n';
   return 0;
 }

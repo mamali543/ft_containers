@@ -1,10 +1,11 @@
-#ifndef HEADER_HPP
-#define HEADER_HPP
+#ifndef VECTOR_HPP
+#define VECTOR_HPP
 
 #include <iostream>
 #include <array>
 #include <memory>
 #include "iterator.hpp"
+#include "revers_iterator.hpp"
 
 namespace ft
 {
@@ -18,6 +19,7 @@ class vector
     typedef const value_type&                       	const_reference;
     typedef ft::iterator<value_type>                    iterator;
     typedef ft::iterator<const value_type>              const_iterator;
+    typedef std::reverse_iterator<iterator>             reverse_iterator;
     typedef T *pointer;
     // typedef typename __alloc_traits::const_pointer   	const_pointer;
     typedef std::size_t 								size_type;
@@ -225,7 +227,7 @@ class vector
 
     iterator begin()
     {
-        return (p);
+        return iterator(p);
     }
 
     const_iterator begin() const
@@ -235,7 +237,7 @@ class vector
 
     iterator end()
     {
-        return (p + _size);
+        return iterator(p + _size);
     }
 
     const_iterator end() const

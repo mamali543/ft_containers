@@ -24,7 +24,7 @@ namespace ft
         explicit reverse_iterator(iterator_type it) : _it(it) {}
         template <class Iter>
         reverse_iterator(const reverse_iterator<Iter> &rev_it) : _it(rev_it.base()) {}
-        // base
+
         iterator_type base() const { return _it; }
         
         reference operator*() const
@@ -32,9 +32,6 @@ namespace ft
 
             iterator_type tmp = _it;
             return *--tmp;
-            
-            // return *(_it - 1);
-            // it returns it -  1 because reverse iterator points to the element before the current one
         }
         reverse_iterator &operator++()
         {
@@ -80,10 +77,6 @@ namespace ft
         {
             return reverse_iterator(_it - n);
         }
-        // reverse_iterator operator-(difference_type n) const
-        // {
-        //     return reverse_iterator(_it + n);
-        // }
 
         reverse_iterator operator-(difference_type n) const
         {

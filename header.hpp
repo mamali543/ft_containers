@@ -1,7 +1,10 @@
+#ifndef HEADER_HPP
+#define HEADER_HPP
+
 #include <iostream>
 #include <array>
 #include <memory>
-
+#include "iterator.hpp"
 
 namespace ft
 {
@@ -13,6 +16,7 @@ class vector
     typedef Alloc 										allocator_type;
     typedef value_type&                            	  	reference;
     typedef const value_type&                       	const_reference;
+    typedef ft::iterator<value_type>                    iterator;
     typedef T *pointer;
     // typedef typename __alloc_traits::const_pointer   	const_pointer;
     typedef std::size_t 								size_type;
@@ -67,7 +71,7 @@ class vector
 
     ~vector()
     {
-        if (_size != 0)
+        if (_capacity != 0)
             allocc.deallocate(p, _size);
     }
 
@@ -218,24 +222,24 @@ class vector
 
 /*------------------ Iterators -------------------------*/
 
-    // iterator begin()
-    // {
-    //     return (p);
-    // }
+    iterator begin()
+    {
+        return iterator(p);
+    }
 
     // const_iterator begin() const
     // {
-    //     return (p);
+    //     return iterator(p);
     // }
 
-    // iterator end()
-    // {
-    //     return (p + _size);
-    // }
+    iterator end()
+    {
+        return iterator(p + _size);
+    }
 
     // const_iterator end() const
     // {
-    //     return (p + _size);
+    //     return iterator(p + _size);
     // }
 
 /*------------------ Allocator -------------------------*/
@@ -247,13 +251,14 @@ class vector
 
 /*------------------ No member functions overload -------------------------*/
 
-template <class T, class Alloc>
-  void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
-  {
-      x.swap(y);
-  };
+// template <class T, class Alloc>
+//   void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
+//   {
+//       x.swap(y);
+//   };
 
 };
 }
 
+#endif
 

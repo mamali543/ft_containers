@@ -29,115 +29,114 @@ namespace ft{
             this->_ptr = obj._ptr;
             return (*this);
         }
-        // template <class U>
-        // bool operator==(const iterator<U> &obj) const
-        // {
-        //     return (this->_ptr == obj._ptr);
-        // }
 
-        // template <class U>
-        // bool operator!=(const iterator<U> &obj) const
-        // {
-        //     return (this->_ptr != obj.base());
-        // }
         iterator &operator++()
         {
             this->_ptr++;
             return *this;
         }
-        
+
         iterator operator++(int)
         {
             iterator tmp(*this);
             this->_ptr++;
             return tmp;
         }
+
         iterator &operator--()
         {
             _ptr--;
             return *this;
         }
+
         iterator operator--(int)
         {
             iterator tmp = *this;
             _ptr--;
             return tmp;
         }
+
         template <class U>
         bool operator==(const iterator<U> &obj) const
         {
-            return (this->_ptr == obj.base());
+            return (this->_ptr == obj._ptr);
         }
+
         template <class U>
         bool operator!=(const iterator<U> &obj) const
         {
-            return (this->_ptr != obj.base());
+            return (this->_ptr != obj._ptr);
         }
+
         template <class U>
         bool operator<=(const iterator<U> &obj) const
         {
-            return (this->_ptr <= obj.base());
+            return (this->_ptr <= obj._ptr);
         }
+
         template <class U>
         bool operator<(const iterator<U> &obj) const
         {
             return (this->_ptr < obj._ptr);
         }
+
         template <class U>
         bool operator>(const iterator<U> &obj) const
         {
-            return (this->_ptr > obj.base());
+            return (this->_ptr > obj._ptr);
         }
+
         template <class U>
         bool operator>=(const iterator<U> &obj) const
         {
-            return (this->_ptr >= obj.base());
+            return (this->_ptr >= obj._ptr);
         }
         // operator - returns distance between two iterators
         difference_type operator-(const iterator &obj) const
         {
-            // * Subtraction gives you the distance >> the number of steps from one point to the other
-            return (this->_ptr - obj.base());
+            //number of cases betwen to cases;
+            return (this->_ptr - obj._ptr);
         }
    
         reference operator*()
         {
-            // * returning reference: references can never be null, so we are safe from tyring to dereference a null pointer
-            // returns the value of the current object
+            //return the value of the adresse pointed
             return *this->_ptr;
         }
       
         pointer operator->() const
         {
             //  returns the address of the object
-            //  should return a reference if I want to use for modification
-            return this->_ptr; // == return (*this)._ptr;
+            return this->_ptr; 
         }
-
-
 
         iterator operator+(difference_type n) const
         {
             return this->_ptr + n;
         }
+    
         iterator operator-(difference_type n) const
         {
             return this->_ptr - n;
         }
+
         reference operator[](int n) const
         {
             return this->_ptr[n];
         }
+
         iterator &operator+=(int n)
         {
             this->_ptr += n;
             return *this;
         }
+
         iterator &operator-=(int n)
         {
             this->_ptr -= n;
             return *this;
         }
+
         operator iterator<const value_type>()
         {
             return iterator<const value_type>(_ptr);

@@ -17,6 +17,7 @@ class vector
     typedef value_type&                            	  	reference;
     typedef const value_type&                       	const_reference;
     typedef ft::iterator<value_type>                    iterator;
+    typedef ft::iterator<const value_type>              const_iterator;
     typedef T *pointer;
     // typedef typename __alloc_traits::const_pointer   	const_pointer;
     typedef std::size_t 								size_type;
@@ -224,23 +225,23 @@ class vector
 
     iterator begin()
     {
-        return iterator(p);
+        return (p);
     }
 
-    // const_iterator begin() const
-    // {
-    //     return iterator(p);
-    // }
+    const_iterator begin() const
+    {
+        return (p);
+    }
 
     iterator end()
     {
-        return iterator(p + _size);
+        return (p + _size);
     }
 
-    // const_iterator end() const
-    // {
-    //     return iterator(p + _size);
-    // }
+    const_iterator end() const
+    {
+        return (p + _size);
+    }
 
 /*------------------ Allocator -------------------------*/
 

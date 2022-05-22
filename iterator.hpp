@@ -137,10 +137,10 @@ namespace ft{
             return *this;
         }
 
-        operator iterator<const value_type>()
-        {
-            return iterator<const value_type>(_ptr);
-        }
+        // operator iterator<const value_type>()
+        // {
+        //     return iterator<const value_type>(_ptr);
+        // }
     };
 }
 

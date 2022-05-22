@@ -6,6 +6,8 @@
 #include <memory>
 #include "iterator.hpp"
 #include "revers_iterator.hpp"
+#include "enable_if.hpp"
+#include "is_integral.hpp"
 
 namespace ft
 {
@@ -237,9 +239,47 @@ class vector
     }
 
     template <class InputIterator>
-    void assign (InputIterator first, InputIterator last)
+    void assign (InputIterator first, InputIterator last, 
+        typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type *f = NULL)
     {
-        
+        size_type n = last - first;
+        if (n > _capacity)
+        {
+            allocc.deallocate(p, _capacity);
+            p = allocc.allocate(n);
+            _capacity = n;
+        }
+        for (size_type i = 0; i < n; ++i)
+            p[i] = *first++;
+        _size = n;
+
+    }
+
+    iterator erase (iterator pos)
+    {
+        for (size_type i = pos - p; i < _size - 1; ++i)
+            p[i] = p[i + 1];
+        _size--;
+        return pos;
+    }
+
+    iterator erase (iterator first, iterator last)
+    {
+        size_type i = 0;
+        size_type j = 0;
+        size_type n = first - this->begin();
+        size_type a = last - first;
+        while (i < n)
+            i++;
+        n = this->size() - a;
+        while (j < n)
+        {
+            p[i] = p[i+a];
+            i++;
+            j++;
+        }
+        _size -= a;
+        return (first);
     }
 /*------------------ Iterators -------------------------*/
 

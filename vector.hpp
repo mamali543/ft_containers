@@ -223,6 +223,24 @@ class vector
         _size--;
     }
 
+    void assign(size_type n, const T &x)
+    {
+        if (n > _capacity)
+        {
+            allocc.deallocate(p, _capacity);
+            p = allocc.allocate(n);
+            _capacity = n;
+        }
+        for (size_type i = 0; i < n; ++i)
+            p[i] = x;
+        _size = n;
+    }
+
+    template <class InputIterator>
+    void assign (InputIterator first, InputIterator last)
+    {
+        
+    }
 /*------------------ Iterators -------------------------*/
 
     iterator begin()
@@ -244,6 +262,26 @@ class vector
     {
         return (p + _size);
     }
+
+    reverse_iterator rbegin()
+    {
+        return reverse_iterator(end());
+    }
+
+    // const_reverse_iterator rbegin() const
+    // {
+    //     return reverse_iterator(end());
+    // }
+    
+    reverse_iterator rend()
+    {
+        return reverse_iterator(begin());
+    }
+
+    // const_reverse_iterator rend() const
+    // {
+    //     return reverse_iterator(begin());
+    // }
 
 /*------------------ Allocator -------------------------*/
 

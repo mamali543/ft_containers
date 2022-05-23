@@ -288,23 +288,31 @@ class vector
         size_type j = this->size();
         size_type i = 0;
         size_type o = position - this->begin();
-        pointer   tmp = allocc.allocate(j + 1);
-        while (i < (_size + 1))
+        if ( _size + 1 > _capacity)
         {
-            if (i == o)
-                tmp[i] = val;
+            std::cout << "hey\n" << std::endl;
+            reserve(_capacity * 2);
+        }
+        // pointer   tmp = allocc.allocate(j + 1);
+        while (_size - i + 1 > 0)
+        {
+
+            if (_size - i == o)
+            {
+                p[_size - i] = val;
+                break;
+            }
             else
             {
-                if (!i)
-                    tmp[i] = p[i];
-                else
-                    tmp[i] = p[i - 1];
+                p[_size - i] =  p[_size - i -1] ;
+                // if (!i)
+                //     tmp[i] = p[i];
+                // else
+                //     tmp[i] = p[i - 1];
             }
             i++;
         }
         _size++;
-        allocc.deallocate(p, j);
-        p = tmp;
         return (p + o);
     }
 

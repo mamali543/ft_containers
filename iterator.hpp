@@ -98,10 +98,10 @@ namespace ft{
             return (this->_ptr - obj._ptr);
         }
    
-        reference operator*()
+        reference operator*() const
         {
             //return the value of the adresse pointed
-            return *this->_ptr;
+            return (*_ptr);
         }
       
         pointer operator->() const

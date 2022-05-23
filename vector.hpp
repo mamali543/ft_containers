@@ -23,6 +23,7 @@ class vector
     typedef ft::iterator<const value_type>              const_iterator;
     typedef std::reverse_iterator<iterator>             reverse_iterator;
     typedef T *pointer;
+    typedef std::ptrdiff_t                          difference_type;
     // typedef typename __alloc_traits::const_pointer   	const_pointer;
     typedef std::size_t 								size_type;
     private:
@@ -284,12 +285,11 @@ class vector
 
     iterator insert (iterator position, const value_type& val)
     {
-        _size++;
         size_type j = this->size();
         size_type i = 0;
         size_type o = position - this->begin();
         pointer   tmp = allocc.allocate(j + 1);
-        while (i < _size)
+        while (i < (_size + 1))
         {
             if (i == o)
                 tmp[i] = val;
@@ -302,6 +302,7 @@ class vector
             }
             i++;
         }
+        _size++;
         allocc.deallocate(p, j);
         p = tmp;
         return (p + o);
@@ -309,7 +310,31 @@ class vector
 
     void insert (iterator position, size_type n, const value_type& val)
     {
-        
+
+        size_type o = position - this->begin();
+        size_type i = 0;
+        size_type k = 0;
+        size_type j = this->size() + n;
+        pointer   tmp = allocc.allocate(j);
+        while (i != o)
+        {
+            tmp[i] = p[i];
+            i++;
+        }
+        while (k < n)
+        {
+            tmp[i] = val;
+            i++;
+            k++;
+        }
+        while (i < j)
+        {
+            tmp[i] = p[i - n];
+            i++;
+        }
+        allocc.deallocate(p, this->size());
+        _size += n;
+        p = tmp;
     }
 
 /*------------------ Iterators -------------------------*/

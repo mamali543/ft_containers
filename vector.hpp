@@ -109,7 +109,7 @@ class vector
     {
         pointer tmp;
         size_type   i;
-        tmp = p;
+        // tmp = p;
         if (n > max_size())
             throw std::length_error("length error");
         else if (n > _capacity)
@@ -281,6 +281,37 @@ class vector
         _size -= a;
         return (first);
     }
+
+    iterator insert (iterator position, const value_type& val)
+    {
+        _size++;
+        size_type j = this->size();
+        size_type i = 0;
+        size_type o = position - this->begin();
+        pointer   tmp = allocc.allocate(j + 1);
+        while (i < _size)
+        {
+            if (i == o)
+                tmp[i] = val;
+            else
+            {
+                if (!i)
+                    tmp[i] = p[i];
+                else
+                    tmp[i] = p[i - 1];
+            }
+            i++;
+        }
+        allocc.deallocate(p, j);
+        p = tmp;
+        return (p + o);
+    }
+
+    void insert (iterator position, size_type n, const value_type& val)
+    {
+        
+    }
+
 /*------------------ Iterators -------------------------*/
 
     iterator begin()

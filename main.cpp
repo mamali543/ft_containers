@@ -9,41 +9,34 @@ using namespace std;
 
 int main ()
 {
-  std::vector<int> myvector;
+  std::vector<int> myvector (3,100);
+  std::vector<int>::iterator it;
+  for (int i = 0; i < myvector.size(); i++)
+    std::cout << myvector[i] << std::endl;  
+  it = myvector.begin() + 2;
+  std::cout << "\n";
+  std::cout << *it << std::endl;
+  it = myvector.insert ( it , 200 );
+  std::cout << std::endl;
+  for (int i = 0; i < myvector.size(); i++)
+    std::cout << myvector[i] << std::endl;
+  std::cout << std::endl;
+  std::cout << *it << std::endl;
 
-  // set some values (from 1 to 10)
-  for (int i=1; i<=10; i++) myvector.push_back(i);
-
-  // erase the 6th element
-  myvector.erase (myvector.begin()+5);
-
-  // erase the first 3 elements:
-  myvector.erase (myvector.begin(),myvector.begin()+3);
-
-  std::cout << "myvector contains:";
-  for (unsigned i=0; i<myvector.size(); ++i)
-    std::cout << ' ' << myvector[i];
-  std::cout << '\n';
-
-
-
-
-
-  ft::vector<int> myvect;
-
-  // set some values (from 1 to 10)
-  for (int i=1; i<=10; i++) myvect.push_back(i);
-
-  // erase the 6th element
-  myvect.erase (myvect.begin()+5);
-
-  // erase the first 3 elements:
-  myvect.erase (myvect.begin(),myvect.begin()+3);
-
-  std::cout << "myvect contains:";
-  for (unsigned i=0; i<myvect.size(); ++i)
-    std::cout << ' ' << myvect[i];
-  std::cout << '\n';
+std::cout << "--------------------------------------" << std::endl;
+  ft::vector<int> myvect (3,100);
+  ft::vector<int>::iterator itt;
+  for (int i = 0; i < myvect.size(); i++)
+    std::cout << myvect[i] << std::endl;  
+  itt = myvect.begin() + 2;
+  std::cout << "\n";
+  std::cout << *itt << std::endl;
+  itt = myvect.insert ( itt , 200 );
+  std::cout << std::endl;
+  for (int i = 0; i < myvect.size(); i++)
+    std::cout << myvect[i] << std::endl;
+  std::cout << std::endl;
+  std::cout << *itt << std::endl;
   return 0;
 
 }

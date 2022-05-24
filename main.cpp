@@ -9,50 +9,58 @@ using namespace std;
 
 int main ()
 {
-  std::vector<int> myvector (3,100); //cap =3
+{  std::vector<int> myvector (3,100);
   std::vector<int>::iterator it;
 
-  it = myvector.begin() + 2;
-      //  myvector.insert ( it , 250 );
-      //  myvector.insert ( it , 250 );
-      //  myvector.insert ( it , 250 );
-
+  it = myvector.begin();
+  it = myvector.insert ( it , 200 );
 
   myvector.insert (it,2,300);
-  std::cout << "\n sallaam" << *(it) << std::endl;
-  // std::cout << "\n sallaam" << *(it) << std::endl;
-  //myvector.insert (it,1,400);
-  //std::cout << "\n sallaam" << *(it) << std::endl;
-  std::cout << "\n" << std::endl;
-  std::cout << myvector.capacity() << std::endl;
-  for (std::vector<int>::iterator itt=myvector.begin();  itt !=  myvector.end(); itt++ )
-  {
-      std::cout << *itt<< std::endl;
-  }
 
   // "it" no longer valid, get a new one:
-std::cout << "------------------------\n" << std::endl;
+  for (int i = 0; i < myvector.size(); i++)
+    std::cout << myvector[i] << std::endl;
+  it = myvector.begin();
+
+  std::vector<int> anothervector (4,400);
+  myvector.insert (it+2,anothervector.begin(),anothervector.end());
+  std::cout << "\n";
+  for (int i = 0; i < myvector.size(); i++)
+    std::cout << myvector[i] << std::endl;
+  int myarray [] = { 501,502,503 };
+  myvector.insert (myvector.begin(), myarray, myarray+3);
+
+  std::cout << "myvector contains:";
+  for (it=myvector.begin(); it<myvector.end(); it++)
+    std::cout << ' ' << *it;}
+  std::cout << '\n';
+  std::cout << '\n';
+  std::cout << '\n';
+
 {
-  ft::vector<int> myvector (3,100);
+    ft::vector<int> myvector (3,100);
   ft::vector<int>::iterator it;
 
-  it = myvector.begin() + 2;
-      // myvector.insert ( it , 250 );
-      // myvector.insert ( it , 250 );
-      // myvector.insert ( it , 250 );
-  // std::cout << "\n sallaam" << *it << std::endl;
+  it = myvector.begin();
+  it = myvector.insert ( it , 200 );
 
   myvector.insert (it,2,300);
-  std::cout << "\n sallaam" << *it << std::endl;
-  std::cout << "\n" << std::endl;
-  std::cout << myvector.capacity() << std::endl;
-  for (ft::vector<int>::iterator itt=myvector.begin();  itt !=  myvector.end(); itt++ )
-  {
-      std::cout << *itt<< std::endl;
-  }
-}
-  return 0;
-}
 
-//100 100 100
-//        100 100 100
+  // "it" no longer valid, get a new one:
+  for (int i = 0; i < myvector.size(); i++)
+    std::cout << myvector[i] << std::endl;
+  it = myvector.begin();
+
+  ft::vector<int> anothervector (4,400);
+  myvector.insert (it+2,anothervector.begin(),anothervector.end());
+  std::cout << "\n";
+  for (int i = 0; i < myvector.size(); i++)
+    std::cout << myvector[i] << std::endl;
+  int myarray [] = { 501,502,503 };
+  myvector.insert (myvector.begin(), myarray, myarray+3);
+
+  std::cout << "myvector contains:";
+  for (it=myvector.begin(); it<myvector.end(); it++)
+    std::cout << ' ' << *it;
+}
+}

@@ -110,7 +110,6 @@ class vector
     {
         pointer tmp;
         size_type   i;
-        // tmp = p;
         if (n > max_size())
             throw std::length_error("length error");
         else if (n > _capacity)
@@ -319,20 +318,40 @@ class vector
             if (_size - i == o)
             {
                 while (k--)
-                {
-                    // std::cout << "yow k: " << k  << " and i :"  << i << " and size :"  << _size << std::endl;
                     p[_size - i + k] = val;
-                    // i++;
-                }
                 break;
             }
             else
-            {
-                // std::cout << "i = " << i << " and size = " << _size << std::endl;
-                // std::cout << "yoo and p[_size - i - 1] = " << p[_size - i - 1] << std::endl;
-                // std::cout << "yoo and p[_size - i - 2] = " << p[_size - i - 2] << std::endl;
                 p[_size - i + n -1] = p[_size - i - 1]; 
+            i++;
+        }
+        _size += n;
+    }
+
+    template <class InputIterator>
+    void insert (iterator position, InputIterator first, InputIterator last,
+         typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type *f = NULL)
+    {
+        difference_type n = last - first;
+        std::cout << "n ===    " << n << " size ===    " << _size << std::endl;
+        size_type       i = 0;
+        size_type       pos = position - begin();
+        if (_capacity < _size + n && n <= _size)
+            reserve(_capacity * 2);
+        else if (_size + n > _capacity)
+            reserve(_capacity + n);
+        while (_size + n - i > 0)
+        {
+            if (_size - i == pos)
+            {
+                std::cout << _size - i << std::endl;
+                pos = n;
+                while (pos--)
+                    p[_size - i + pos] = *(--last);
+                break;
             }
+            else
+                p[_size - i + n - 1] = p[_size -i - 1];
             i++;
         }
         _size += n;

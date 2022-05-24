@@ -12,16 +12,18 @@ int main ()
   std::vector<int> myvector (3,100); //cap =3
   std::vector<int>::iterator it;
 
-  it = myvector.insert ( myvector.begin() , 200 );
-       myvector.insert ( it , 250 );
+  it = myvector.begin() + 2;
+      //  myvector.insert ( it , 250 );
+      //  myvector.insert ( it , 250 );
+      //  myvector.insert ( it , 250 );
 
-  std::cout << "\n sallaam" << *(it) << std::endl;
 
   myvector.insert (it,2,300);
   std::cout << "\n sallaam" << *(it) << std::endl;
+  // std::cout << "\n sallaam" << *(it) << std::endl;
   //myvector.insert (it,1,400);
   //std::cout << "\n sallaam" << *(it) << std::endl;
-  //std::cout << "\n" << std::endl;
+  std::cout << "\n" << std::endl;
   std::cout << myvector.capacity() << std::endl;
   for (std::vector<int>::iterator itt=myvector.begin();  itt !=  myvector.end(); itt++ )
   {
@@ -34,12 +36,15 @@ std::cout << "------------------------\n" << std::endl;
   ft::vector<int> myvector (3,100);
   ft::vector<int>::iterator it;
 
-  it = myvector.insert ( myvector.begin(), 200 );
-      myvector.insert ( it , 250 );
-  std::cout << "\n sallaam" << *it << std::endl;
+  it = myvector.begin() + 2;
+      // myvector.insert ( it , 250 );
+      // myvector.insert ( it , 250 );
+      // myvector.insert ( it , 250 );
+  // std::cout << "\n sallaam" << *it << std::endl;
 
   myvector.insert (it,2,300);
   std::cout << "\n sallaam" << *it << std::endl;
+  std::cout << "\n" << std::endl;
   std::cout << myvector.capacity() << std::endl;
   for (ft::vector<int>::iterator itt=myvector.begin();  itt !=  myvector.end(); itt++ )
   {
@@ -50,3 +55,4 @@ std::cout << "------------------------\n" << std::endl;
 }
 
 //100 100 100
+//        100 100 100

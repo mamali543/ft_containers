@@ -42,12 +42,12 @@ class vector
     };
 
     /*---------------------------- Constructors -------------------------*/
-    explicit vector (const allocator_type& alloc = allocator_type()): _capacity(0), p(NULL), _size(0), allocc(alloc)
+    explicit vector (const allocator_type& alloc = allocator_type()): _capacity(1), p(NULL), _size(0), allocc(alloc)
     {
 
     }
 
-    explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()): _size(0), p(NULL), allocc(alloc), _capacity(0)
+    explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()): _size(0), p(NULL), allocc(alloc), _capacity()
     {
         reserve(n);
         for (size_type i = 0; i < n; ++i)
@@ -289,27 +289,16 @@ class vector
         size_type i = 0;
         size_type o = position - this->begin();
         if ( _size + 1 > _capacity)
-        {
-            std::cout << "hey\n" << std::endl;
             reserve(_capacity * 2);
-        }
-        // pointer   tmp = allocc.allocate(j + 1);
         while (_size - i + 1 > 0)
         {
-
             if (_size - i == o)
             {
                 p[_size - i] = val;
                 break;
             }
             else
-            {
                 p[_size - i] =  p[_size - i -1] ;
-                // if (!i)
-                //     tmp[i] = p[i];
-                // else
-                //     tmp[i] = p[i - 1];
-            }
             i++;
         }
         _size++;
@@ -318,31 +307,35 @@ class vector
 
     void insert (iterator position, size_type n, const value_type& val)
     {
-
         size_type o = position - this->begin();
         size_type i = 0;
-        size_type k = 0;
-        size_type j = this->size() + n;
-        pointer   tmp = allocc.allocate(j);
-        while (i != o)
+        size_type k = n;
+        if (_size + n > _capacity * 2)
+            reserve(_size + n);
+        else
+            reserve(_capacity * 2);
+        while (_size - i + n > 0)
         {
-            tmp[i] = p[i];
+            if (_size - i == o)
+            {
+                while (k--)
+                {
+                    // std::cout << "yow k: " << k  << " and i :"  << i << " and size :"  << _size << std::endl;
+                    p[_size - i + k] = val;
+                    // i++;
+                }
+                break;
+            }
+            else
+            {
+                // std::cout << "i = " << i << " and size = " << _size << std::endl;
+                // std::cout << "yoo and p[_size - i - 1] = " << p[_size - i - 1] << std::endl;
+                // std::cout << "yoo and p[_size - i - 2] = " << p[_size - i - 2] << std::endl;
+                p[_size - i + n -1] = p[_size - i - 1]; 
+            }
             i++;
         }
-        while (k < n)
-        {
-            tmp[i] = val;
-            i++;
-            k++;
-        }
-        while (i < j)
-        {
-            tmp[i] = p[i - n];
-            i++;
-        }
-        allocc.deallocate(p, this->size());
         _size += n;
-        p = tmp;
     }
 
 /*------------------ Iterators -------------------------*/

@@ -21,7 +21,9 @@ class vector
     typedef const value_type&                       	const_reference;
     typedef ft::iterator<value_type>                    iterator;
     typedef ft::iterator<const value_type>              const_iterator;
-    typedef std::reverse_iterator<iterator>             reverse_iterator;
+    typedef ft::reverse_iterator<iterator>             reverse_iterator;
+    typedef ft::reverse_iterator<const iterator>       const_reverse_iterator;
+
     typedef T *pointer;
     typedef std::ptrdiff_t                          difference_type;
     // typedef typename __alloc_traits::const_pointer   	const_pointer;
@@ -53,6 +55,16 @@ class vector
         for (size_type i = 0; i < n; ++i)
             p[i] = val;
         _size = n;
+    }
+
+    template <class InputIterator>
+    vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type(),
+            typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type *f = NULL) : allocc(alloc), p(NULL), _size(0), _capacity(0)
+    {
+        (void)f;
+        reserve(last - first);
+        for (; first != last; first++)
+            p[_size++] = *first;
     }
 
     vector (const vector& x) : p(NULL), allocc(x.allocc)
@@ -333,7 +345,6 @@ class vector
          typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type *f = NULL)
     {
         difference_type n = last - first;
-        std::cout << "n ===    " << n << " size ===    " << _size << std::endl;
         size_type       i = 0;
         size_type       pos = position - begin();
         if (_capacity < _size + n && n <= _size)
@@ -384,20 +395,20 @@ class vector
         return reverse_iterator(end());
     }
 
-    // const_reverse_iterator rbegin() const
-    // {
-    //     return reverse_iterator(end());
-    // }
+    const_reverse_iterator rbegin() const
+    {
+        return reverse_iterator(end());
+    }
     
     reverse_iterator rend()
     {
         return reverse_iterator(begin());
     }
 
-    // const_reverse_iterator rend() const
-    // {
-    //     return reverse_iterator(begin());
-    // }
+    const_reverse_iterator rend() const
+    {
+        return reverse_iterator(begin());
+    }
 
 /*------------------ Allocator -------------------------*/
 
@@ -408,13 +419,70 @@ class vector
 
 /*------------------ No member functions overload -------------------------*/
 
-// template <class T, class Alloc>
-//   void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
-//   {
-//       x.swap(y);
-//   };
+template <class T, class Alloc>
+  void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
+  {
+      x.swap(y);
+  }
 
+/*---------------------- relational operators ------------------------*/
+template <class T, class Alloc>
+  bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+  {
+        if (lhs.size() != rhs.size())
+            return (false);
+        for (size_type  i = 0; i < lhs.size(); i++)
+        {
+            if (lhs[i] != rhs[i])
+                return (false);
+        }
+        return (true);
+  }
+template <class T, class Alloc>
+  bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+  {
+      return (!(lhs == rhs));
+  }
+template <class T, class Alloc>
+  bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+  {
+      if (lhs.size() < rhs.size())
+        return (true);
+      else if(lhs.size() > rhs.size())
+        return (false);
+      for (int i = 0;i < lhs.size(); i++)
+      {
+          if (lhs[i] < rhs[i])
+            return (true);
+          else if (lhs[i] > rhs[i])
+            return (false);
+      }
+      return (false);
+  }
+template <class T, class Alloc>
+  bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+  {
+      return (rhs < lhs);
+  }
+template <class T, class Alloc>
+  bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+  {
+      return(!(lhs > rhs);
+  }
+template <class T, class Alloc>
+  bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+  {
+      return (!(rhs > lhs));
+  }
 };
+}
+
+template <typename T>
+std::ostream &operator<<(std::ostream &os, const ft::vector<T> &v)
+{
+    for (size_t i = 0; i < v.size(); ++i)
+        os << v[i] << " ";
+    return os;
 }
 
 #endif

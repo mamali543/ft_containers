@@ -9,58 +9,36 @@ using namespace std;
 
 int main ()
 {
-{  std::vector<int> myvector (3,100);
-  std::vector<int>::iterator it;
+{  // constructors used in the same order as described above:
+  std::vector<int> first;                                // empty vector of ints
+  std::vector<int> second (4,100);                       // four ints with value 100
+  std::vector<int> third (second.begin(),second.end());  // iterating through second
+  std::vector<int> fourth (third);                       // a copy of third
 
-  it = myvector.begin();
-  it = myvector.insert ( it , 200 );
+  // the iterator constructor can also be used to construct from arrays:
+  int myints[] = {16,2,77,29};
+  std::vector<int> fifth (myints, myints + sizeof(myints) / sizeof(int) );
 
-  myvector.insert (it,2,300);
-
-  // "it" no longer valid, get a new one:
-  for (int i = 0; i < myvector.size(); i++)
-    std::cout << myvector[i] << std::endl;
-  it = myvector.begin();
-
-  std::vector<int> anothervector (4,400);
-  myvector.insert (it+2,anothervector.begin(),anothervector.end());
-  std::cout << "\n";
-  for (int i = 0; i < myvector.size(); i++)
-    std::cout << myvector[i] << std::endl;
-  int myarray [] = { 501,502,503 };
-  myvector.insert (myvector.begin(), myarray, myarray+3);
-
-  std::cout << "myvector contains:";
-  for (it=myvector.begin(); it<myvector.end(); it++)
-    std::cout << ' ' << *it;}
-  std::cout << '\n';
-  std::cout << '\n';
-  std::cout << '\n';
-
-{
-    ft::vector<int> myvector (3,100);
-  ft::vector<int>::iterator it;
-
-  it = myvector.begin();
-  it = myvector.insert ( it , 200 );
-
-  myvector.insert (it,2,300);
-
-  // "it" no longer valid, get a new one:
-  for (int i = 0; i < myvector.size(); i++)
-    std::cout << myvector[i] << std::endl;
-  it = myvector.begin();
-
-  ft::vector<int> anothervector (4,400);
-  myvector.insert (it+2,anothervector.begin(),anothervector.end());
-  std::cout << "\n";
-  for (int i = 0; i < myvector.size(); i++)
-    std::cout << myvector[i] << std::endl;
-  int myarray [] = { 501,502,503 };
-  myvector.insert (myvector.begin(), myarray, myarray+3);
-
-  std::cout << "myvector contains:";
-  for (it=myvector.begin(); it<myvector.end(); it++)
+  std::cout << "The contents of fifth are:";
+  for (std::vector<int>::iterator it = fifth.begin(); it != fifth.end(); ++it)
     std::cout << ' ' << *it;
+  std::cout << '\n';}
+
+
+{    ft::vector<int> first;                                // empty vector of ints
+  ft::vector<int> second (4,100);                       // four ints with value 100
+  ft::vector<int> third (second.begin(),second.end());  // iterating through second
+  ft::vector<int> fourth (third);                       // a copy of third
+
+  // the iterator constructor can also be used to construct from arrays:
+  int myints[] = {16,2,77,29};
+  ft::vector<int> fifth (myints, myints + sizeof(myints) / sizeof(int) );
+
+  std::cout << "The contents of fifth are:";
+  for (ft::vector<int>::iterator it = fifth.begin(); it != fifth.end(); ++it)
+    std::cout << ' ' << *it;
+  std::cout << '\n';}
+
+  return 0;
 }
-}
+

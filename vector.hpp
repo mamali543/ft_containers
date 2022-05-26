@@ -419,32 +419,36 @@ class vector
 
 /*------------------ No member functions overload -------------------------*/
 
-template <class T, class Alloc>
-  void swap (vector<T,Alloc>& x, vector<T,Alloc>& y)
+template <class M, class allocc>
+  void swap (vector<M,allocc>& x, vector<M,allocc>& y)
   {
       x.swap(y);
   }
+};
+
+}
+
 
 /*---------------------- relational operators ------------------------*/
-template <class T, class Alloc>
-  bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+ template <class M, class alocc>
+   bool operator== (const ft::vector<M,alocc>& lhs, const ft::vector<M,alocc>& rhs)
   {
         if (lhs.size() != rhs.size())
             return (false);
-        for (size_type  i = 0; i < lhs.size(); i++)
+        for (size_t  i = 0; i < lhs.size(); i++)
         {
             if (lhs[i] != rhs[i])
                 return (false);
         }
         return (true);
   }
-template <class T, class Alloc>
-  bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+  template <class M, class alocc>
+   bool operator!= (const ft::vector<M,alocc>& lhs, const ft::vector<M,alocc>& rhs)
   {
       return (!(lhs == rhs));
   }
-template <class T, class Alloc>
-  bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+ template <class M, class alocc>
+   bool operator<  (const ft::vector<M,alocc>& lhs, const ft::vector<M,alocc>& rhs)
   {
       if (lhs.size() < rhs.size())
         return (true);
@@ -459,23 +463,23 @@ template <class T, class Alloc>
       }
       return (false);
   }
-template <class T, class Alloc>
-  bool operator>  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+ template <class M, class alocc>
+  bool operator>  (const ft::vector<M,alocc>& lhs, const ft::vector<M,alocc>& rhs)
   {
       return (rhs < lhs);
   }
-template <class T, class Alloc>
-  bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+ template <class M, class alocc>
+ 
+ bool operator<= (const ft::vector<M,alocc>& lhs, const ft::vector<M,alocc>& rhs)
   {
-      return(!(lhs > rhs);
+      return(!(lhs > rhs));
   }
-template <class T, class Alloc>
-  bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+ template <class M, class alocc>
+ 
+ bool operator>= (const ft::vector<M,alocc>& lhs, const ft::vector<M,alocc>& rhs)
   {
       return (!(rhs > lhs));
   }
-};
-}
 
 template <typename T>
 std::ostream &operator<<(std::ostream &os, const ft::vector<T> &v)

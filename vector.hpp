@@ -44,7 +44,7 @@ class vector
     };
 
     /*---------------------------- Constructors -------------------------*/
-    explicit vector (const allocator_type& alloc = allocator_type()): _capacity(1), p(NULL), _size(0), allocc(alloc)
+    explicit vector (const allocator_type& alloc = allocator_type()): _capacity(0), p(NULL), _size(0), allocc(alloc)
     {
 
     }
@@ -126,6 +126,8 @@ class vector
             throw std::length_error("length error");
         else if (n > _capacity)
         {
+            if (n == 0)
+                std::cout << "capa : " << _capacity << std::endl;
             pointer tmp = allocc.allocate(n);
             for (i = 0; i < _size ; i++)
                 tmp[i] = p[i];
@@ -133,6 +135,10 @@ class vector
             p = tmp;
             _capacity = n;
         }
+
+        if (n  == 0)
+            _capacity = 0;
+
     }
 
     void resize (size_type n, value_type val = value_type())
@@ -148,6 +154,7 @@ class vector
         }
         else if (n > _capacity)
         {
+
             if (n > (_capacity * 2))
                 reserve(n);
             else
@@ -355,10 +362,23 @@ class vector
         {
             if (_size - i == pos)
             {
-                std::cout << _size - i << std::endl;
                 pos = n;
+                try
+                {
                 while (pos--)
                     p[_size - i + pos] = *(--last);
+                }
+                catch(...)
+                {
+                    for (size_type i = size(); i != 0     ; i--)
+                    {
+
+                        std::cout << "i =  "<< i<<  std::endl;
+                        allocc.destroy(&p[i - 1]);
+                    }
+                    _capacity = 0;
+                    throw 3;
+                }
                 break;
             }
             else
@@ -411,14 +431,12 @@ class vector
     }
 
 /*------------------ Allocator -------------------------*/
-
     allocator_type get_allocator() const
     {
         return (allocc);
     }
 
 /*------------------ No member functions overload -------------------------*/
-
 template <class M, class allocc>
   void swap (vector<M,allocc>& x, vector<M,allocc>& y)
   {
@@ -427,7 +445,6 @@ template <class M, class allocc>
 };
 
 }
-
 
 /*---------------------- relational operators ------------------------*/
  template <class M, class alocc>
@@ -442,18 +459,20 @@ template <class M, class allocc>
         }
         return (true);
   }
+  
   template <class M, class alocc>
    bool operator!= (const ft::vector<M,alocc>& lhs, const ft::vector<M,alocc>& rhs)
   {
       return (!(lhs == rhs));
   }
+ 
  template <class M, class alocc>
    bool operator<  (const ft::vector<M,alocc>& lhs, const ft::vector<M,alocc>& rhs)
   {
       if (lhs.size() < rhs.size())
         return (true);
       else if(lhs.size() > rhs.size())
-        return (false);
+          return (false);
       for (int i = 0;i < lhs.size(); i++)
       {
           if (lhs[i] < rhs[i])
@@ -463,19 +482,20 @@ template <class M, class allocc>
       }
       return (false);
   }
+ 
  template <class M, class alocc>
   bool operator>  (const ft::vector<M,alocc>& lhs, const ft::vector<M,alocc>& rhs)
   {
       return (rhs < lhs);
   }
- template <class M, class alocc>
  
+ template <class M, class alocc>
  bool operator<= (const ft::vector<M,alocc>& lhs, const ft::vector<M,alocc>& rhs)
   {
       return(!(lhs > rhs));
   }
- template <class M, class alocc>
- 
+
+ template <class M, class alocc> 
  bool operator>= (const ft::vector<M,alocc>& lhs, const ft::vector<M,alocc>& rhs)
   {
       return (!(rhs > lhs));

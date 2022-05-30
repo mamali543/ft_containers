@@ -24,15 +24,14 @@ class vector
     typedef ft::reverse_iterator<iterator>             reverse_iterator;
     typedef ft::reverse_iterator<const iterator>       const_reverse_iterator;
 
-    typedef T *pointer;
-    typedef std::ptrdiff_t                          difference_type;
-    // typedef typename __alloc_traits::const_pointer   	const_pointer;
+    typedef T                                           *pointer;
+    typedef std::ptrdiff_t                              difference_type;
     typedef std::size_t 								size_type;
     private:
-        size_type _capacity;
-        size_type _size;
-        pointer p;
-        allocator_type allocc;
+        size_type                                       _capacity;
+        size_type                                       _size;
+        pointer                                         p;
+        allocator_type                                  allocc;
     public:
 
     class outofbounds : public std::exception
@@ -89,8 +88,9 @@ class vector
 
     ~vector()
     {
+        // std::cout << "heeeeeey\n"<< std::endl;
         if (_capacity != 0)
-            allocc.deallocate(p, _size);
+            allocc.deallocate(p, _capacity);
     }
 
     /*---------------------------- Capacity -------------------------*/
@@ -444,9 +444,6 @@ template <class M, class allocc>
   }
 };
 
-}
-
-/*---------------------- relational operators ------------------------*/
  template <class M, class alocc>
    bool operator== (const ft::vector<M,alocc>& lhs, const ft::vector<M,alocc>& rhs)
   {
@@ -500,6 +497,9 @@ template <class M, class allocc>
   {
       return (!(rhs > lhs));
   }
+}
+
+/*---------------------- relational operators ------------------------*/
 
 template <typename T>
 std::ostream &operator<<(std::ostream &os, const ft::vector<T> &v)

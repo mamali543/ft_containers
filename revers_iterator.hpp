@@ -31,7 +31,7 @@ namespace ft
         {
 
             iterator_type tmp = _it;
-            return *--tmp;
+            return *(--tmp);
         }
         reverse_iterator &operator++()
         {

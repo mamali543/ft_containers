@@ -181,39 +181,47 @@
 #include <vector>         // std::vector
 #include <deque>          // std::deque
 
-int main ()
+// int main ()
+// {
+// {  std::vector<int> mydeque (3,100);          // deque with 3 elements
+//   std::vector<int> myvector (2,200);        // vector with 2 elements
+
+//   std::stack<int> first;                    // empty stack
+// //   std::stack<int> second (mydeque);         // stack initialized to copy of deque
+
+//   std::stack<int,std::vector<int> > third;  // empty stack using vector
+//   std::stack<int,std::vector<int> > fourth (myvector);
+
+//   if (fourth > third)     
+//     std::cout << "forth greater than first: " << '\n';
+//   else if (fourth < third)
+//     std::cout << "first greater than forth:" << '\n';
+//  else
+//     std::cout << "forth and first are equal"<< '\n';}
+
+//   { std::vector<int> mydeque (3,100);          // deque with 3 elements
+//   ft::vector<int> myvector (2,200);        // vector with 2 elements
+
+//   ft::stack<int> first;                    // empty stack
+// //   ft::stack<int> second (mydeque);         // stack initialized to copy of deque
+
+//   ft::stack<int,ft::vector<int> > third;  // empty stack using vector
+//   ft::stack<int,ft::vector<int> > fourth (myvector);
+//   if (fourth > third)     
+//     std::cout << "forth greater than first: " << '\n';
+//   else if (fourth < third)
+//     std::cout << "first greater than forth:" << '\n';
+//  else
+//     std::cout << "forth and first are equal"<< '\n';
+//   }
+
+//   return 0;
+// }
+
+
+int main()
 {
-{  std::vector<int> mydeque (3,100);          // deque with 3 elements
-  std::vector<int> myvector (2,200);        // vector with 2 elements
-
-  std::stack<int> first;                    // empty stack
-//   std::stack<int> second (mydeque);         // stack initialized to copy of deque
-
-  std::stack<int,std::vector<int> > third;  // empty stack using vector
-  std::stack<int,std::vector<int> > fourth (myvector);
-
-  if (fourth > third)     
-    std::cout << "forth greater than first: " << '\n';
-  else if (fourth < third)
-    std::cout << "first greater than forth:" << '\n';
- else
-    std::cout << "forth and first are equal"<< '\n';}
-
-  { std::vector<int> mydeque (3,100);          // deque with 3 elements
-  ft::vector<int> myvector (2,200);        // vector with 2 elements
-
-  ft::stack<int> first;                    // empty stack
-//   ft::stack<int> second (mydeque);         // stack initialized to copy of deque
-
-  ft::stack<int,ft::vector<int> > third;  // empty stack using vector
-  ft::stack<int,ft::vector<int> > fourth (myvector);
-  if (fourth > third)     
-    std::cout << "forth greater than first: " << '\n';
-  else if (fourth < third)
-    std::cout << "first greater than forth:" << '\n';
- else
-    std::cout << "forth and first are equal"<< '\n';
-  }
-
-  return 0;
+  ft::vector<std::string> my_v(10, "range constructor test");
+  ft::vector<std::string> my_v1(my_v.begin(), my_v.end());
+  return  0;
 }

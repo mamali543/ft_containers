@@ -1,6 +1,8 @@
 #ifndef ITERATOR_HPP
 #define ITERATOR_HPP
 
+#include "iterator_traits.hpp"
+
 
 namespace ft{
     
@@ -142,6 +144,11 @@ namespace ft{
             return iterator<const value_type>(_ptr);
         }
     };
+    template <typename T>
+    iterator<T> operator+(std::ptrdiff_t n, ft::iterator<T> it)
+    {
+        return it + n;
+    }
 }
 
 #endif

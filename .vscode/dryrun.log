@@ -1,0 +1,6 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/mamali/Desktop/ft_containers'
+make: Leaving directory `/Users/mamali/Desktop/ft_containers'
+ 
+make: *** No targets.  Stop.
+

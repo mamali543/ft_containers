@@ -35,9 +35,9 @@ template < class Key,                                     // map::key_type
             protected:
                 key_Compare _compare;
             public:
-            typedef bool result_type;
-            typedef value_type first_argument_type;
-            typedef value_type second_argument_type;
+            // typedef bool result_type;
+            // typedef value_type first_argument_type;
+            // typedef value_type second_argument_type;
             bool operator() (const value_type& x, const value_type& y) const
             {
                 return _compare(x.first, y.first);

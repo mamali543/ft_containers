@@ -128,6 +128,19 @@ namespace ft{
         }
 
         /*                 help methods                   */
+
+        int height() const
+        {
+            if (_root == NULL)
+                return 0;
+            return _root->_height;
+        }
+
+        bool exists(key_type elem) const 
+        {
+            return (__exists(_root, elem));
+        }
+
         bool equal(const key_type &keya, const key_type &keyb)
         {
             return(_compare(keya, keyb) == false && _compare(keyb, keya) == false);
@@ -140,20 +153,21 @@ namespace ft{
             else if(equal(node->_data->first, k))
                 return (true);
             else if (_compare(node->_data->first, k))
-                return (exist(node->_right, k);
+                return (exist(node->_right, k));
             else
                 return(exist(node->_left, k));
 
         }
+
     public:
-        avl_tree() : _root(NULL), _size(0), _compare(), _pair_allocator() {}
+        avl_tree() : _root(NULL), _size(0), _compare(), _pair_allocator(), node_allocator() {}
 
         avl_tree(const avl_tree &other) : _root(NULL), _size(other._size)
         {
             *this = other;
         }
 
-        avl_tree(const Compare &comp, const allocator_type &alloc) : _root(NULL), _compare(comp), _pair_allocator(alloc) {}
+        avl_tree(const Compare &comp, const allocator_type &alloc) : _root(NULL), _compare(comp), _pair_allocator(alloc), node_allocator(alloc) {}
 
         avl_tree &operator=(const avl_tree &other)
         {
@@ -162,6 +176,36 @@ namespace ft{
             copy(tmp);
             return *this;
         }
+
+        void clear()
+        {
+            free_node(_root);
+            _size = 0;
+        }
+
+        void free_node(node_type *node)
+        {
+            if (node)
+            {
+                node->_left = NULL;
+                node->_right = NULL;
+                _pair_allocator.destroy(node->_data);
+                _pair_allocator.deallocate(node->_data, 1);
+                node_allocator.dellocate(node, 1);
+            }
+            node = NULL;
+        }
+
+        void copy(node_type *node)
+        {
+            if (node != NULL)
+            {
+                insert(*(node->_data));
+                copy(node->_left);
+                copy(node->_right);
+            }
+        }
+
         /*                 Search                   */
         Node<T> *search(Node<T> *node, key_type key)
         {
@@ -191,6 +235,14 @@ namespace ft{
             return(tmp);
         }
 
+        void    update(node_type *node)
+        {
+            int leftheight = (node->_left == NULL) ? -1 : node->_left->_height;
+            int rightheight = (node->_right == NULL) ? -1 : node->_right->_height;
+            node->_height = std::max(rightheight, leftheight) + 1;
+            node->_balance_factor = rightheight - leftheight;
+        }
+
         node_type *insert(node_type *node, value_type x)
         {
             if (node == NULL)
@@ -205,6 +257,7 @@ namespace ft{
                 node->_left = insert(node->_left, x);
                 node->_left->_parent = node;
             }
+            update(node);
         }
 
         bool    insert(value_type x)
@@ -220,11 +273,87 @@ namespace ft{
             return (false);
         }
 
-        void    update(node_type *node)
+        node_type *right_rotate(node_type *node)
         {
-            int leftheight = (node->_left == NULL) ? -1 : node->_left->_height;
-            int rightheight = (node->_right == NULL) ? -1 : node->_right->_height;
-            node->_height = std::max(rightheight, leftheight) + 1;
+            node->_left = node->_left->_right;
+            if (node->_left->_right)
+                node->_left->_right->_parent = node;
+            node->_parent = node->_left;
+            if (!node->_parent)
+                _root = node->_left;
+            else if (node == node->_parent->_left)
+                node->_parent->_left = node->_left;
+            else
+                node->_parent->_right = node->_left;
+            node->_left->_right = node;
+            node->_left->_parent = node->_parent;
+            update(node);
+            update(node->_left);
+            return (node->_left);
+        }
+
+        node_type *left_rotate(node_type *node)
+        {
+            node->_right = node->_right->_left;
+            if (node->_right->_left)
+                node->_right->_left->_parent = node;
+            node->_parent = node->_right;
+            if (!node->_parent)
+                _root = node->_right;
+            else if (node == node->_parent->_left)
+                node->_parent->_left = node->_right;
+            else
+                node->_parent->_right = node->_right;
+            node->_right->_left = node;
+            node->_right->_parent = node->_parent;
+            update(node);
+            update(node->_right);
+            return (node->_right);
+        }
+
+        node_type *lr_rotate(node_type *node)
+        {
+            node->_left = left_rotate(node->_left);
+            return (right_rotate(node));
+        }
+
+        node_type *rl_rotate(node_type *node)
+        {
+            node->_right = right_rotate(node->_right);
+            return (left_rotate(node));
+        }
+
+        node_type *balance(node_type *node)
+        {
+            if (node->_balance_factor < -1)
+            {
+                if (node->_left->_balance_factor <= 0)
+                    return (left_rotate(node));
+                else
+                    return(lr_rotate(node));
+            }
+            else if(node->_balance_factor > 1)
+            {
+                if (node->_right->_balance_factor >= 0)
+                    return(right_rotate(node));
+                else
+                    return (rl_rotate(node));
+            }
+            return (node);
+        }
+
+        node_type   *max(node_type *node)const
+        {
+            while (node->_right)
+                node = node->_right;
+            return (node);
+        }
+
+        node_type   *min(node_type *node)const
+        {
+            while (node->_left)
+                node = node->_left;
+            return (node);
         }
     };
 }

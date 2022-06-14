@@ -114,12 +114,13 @@ namespace ft{
         allocator_type _pair_allocator;
         node_allocator _node_allocator;
 
-        int tree_height(node_type* root) {
-            if (!root)
+        int tree_height(node_type* node) 
+        {
+            if (!node)
                 return 0;
             else {
-                int left_height = tree_height(root->left);
-                int right_height = tree_height(root->right);
+                int left_height = tree_height(node->left);
+                int right_height = tree_height(node->right);
                 if (left_height >= right_height)
                     return left_height + 1;
                 else
@@ -157,6 +158,13 @@ namespace ft{
             else
                 return(exist(node->_left, k));
 
+        }
+
+        void swap(avl_tree &other)
+        {
+            std::swap(_size, other._size);
+            std::swap(_root, other._root);
+            std::swap(_compare, other._compare);
         }
 
     public:
@@ -355,8 +363,66 @@ namespace ft{
                 node = node->_left;
             return (node);
         }
+
+        node_type *remove(node_type *node, key_type key)
+        {
+            if (node == NULL)
+                return (NULL);
+            if (_compare(node->_data->first, key))
+                node->_right = remove(node->_right, key)
+            else if (_compare(key, node->_data->first))
+                node->_left = remove(node->_left, key);
+            else
+            {
+                if (!node->_left && node->_right)
+                {
+                    node->_right->_parent = node->_parent;
+                    _pair_allocator.destroy(node->_data);
+                    _pair_allocator.construct(node->_data,*( node->_right->_data));
+                    _pair_allocator.destroy(node->_right->_data);
+                    _pair_allocator.deallocate(node->_right->_data, 1);
+                    _node_allocator.deallocate(node->_right, 1);
+                    node->_right = NULL
+                }
+                else if (node->_left && !node->_right)
+                {
+                    node->_left->_parent = node->_parent;
+                    _pair_allocator.destroy(node->_data);
+                    _pair_allocator.construct(node->_data, *(node->_left->_data));
+                    _pair_allocator.destory(node->_left->_data, 1);
+                    _pair_allocator.deallocate(node->_left->_data, 1);
+                    _node_allocator.deallocate(node->_left, 1);
+                    node->_left = NULL;
+                }
+                else if(!node->_left && !node->_right)
+                {
+                    _pair_allocator.destroy(node->_data)
+                    _pair_allocator.deallocate(node->_data, 1);
+                    _node_allocator.deallocate(node, 1);
+                    node = NULL;
+                }
+                else
+                {
+                    node_type   *n = max_node(node->_left);
+                    _pair_allocator.destroy(node->_data);
+                    _pair_allocator.construct(node->_data, *(n->_data));
+                    _pair_allocator.deallocate(n, 1);
+                    node->_left = remove(node->_left, n->_data->first);
+                }
+            }
+            
+        }
+
+        bool remove(key_type key)
+        {
+            if (!exists(key))
+                return false;
+            _root = remove(_root, key);
+            _size--;
+            return true;
+        }
+
     };
 }
-
 
 #endif

@@ -114,6 +114,8 @@ namespace ft{
         allocator_type _pair_allocator;
         node_allocator _node_allocator;
 
+        /*                 help methods                   */
+        
         int tree_height(node_type* node) 
         {
             if (!node)
@@ -127,8 +129,6 @@ namespace ft{
                     return right_height + 1;
             }
         }
-
-        /*                 help methods                   */
 
         int height() const
         {
@@ -145,6 +145,20 @@ namespace ft{
         bool equal(const key_type &keya, const key_type &keyb)
         {
             return(_compare(keya, keyb) == false && _compare(keyb, keya) == false);
+        }
+
+        node_type   *max(node_type *node)const
+        {
+            while (node->_right)
+                node = node->_right;
+            return (node);
+        }
+
+        node_type   *min(node_type *node)const
+        {
+            while (node->_left)
+                node = node->_left;
+            return (node);
         }
 
         bool exist(node_type    *node, key_type k)
@@ -280,7 +294,7 @@ namespace ft{
             }
             return (false);
         }
-
+        /*                 Balance                   */
         node_type *right_rotate(node_type *node)
         {
             node->_left = node->_left->_right;
@@ -350,20 +364,7 @@ namespace ft{
             return (node);
         }
 
-        node_type   *max(node_type *node)const
-        {
-            while (node->_right)
-                node = node->_right;
-            return (node);
-        }
-
-        node_type   *min(node_type *node)const
-        {
-            while (node->_left)
-                node = node->_left;
-            return (node);
-        }
-
+        /*                 Remove                   */
         node_type *remove(node_type *node, key_type key)
         {
             if (node == NULL)
@@ -403,14 +404,14 @@ namespace ft{
                 }
                 else
                 {
-                    node_type   *n = max_node(node->_left);
+                    node_type   *n = min_node(node->_right);
                     _pair_allocator.destroy(node->_data);
                     _pair_allocator.construct(node->_data, *(n->_data));
-                    _pair_allocator.deallocate(n, 1);
-                    node->_left = remove(node->_left, n->_data->first);
+                    node->_right = remove(node->_right, n->_data->first);
                 }
             }
-            
+            update(node);
+            return(balance(node));
         }
 
         bool remove(key_type key)

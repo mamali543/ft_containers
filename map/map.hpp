@@ -2,7 +2,7 @@
 #define MAP_HPP
 
 #include <iostream>
-
+# include "avl_tree.hpp"
 
 namespace ft{
 
@@ -14,7 +14,7 @@ template < class Key,                                     // map::key_type
     {
         public:
             typedef Key key_type;
-            typedef Mapped_Type mapped_type;
+            typedef T mapped_type;
             typedef typename ft::pair<const key_type, mapped_type> value_type;
             typedef Compare key_compare;
             typedef Alloc allocator_type;
@@ -33,7 +33,7 @@ template < class Key,                                     // map::key_type
             typedef class value_compare : public std::binary_function<value_type, value_type, bool>
             {
             protected:
-                key_Compare _compare;
+                key_compare _compare;
             public:
             // typedef bool result_type;
             // typedef value_type first_argument_type;
@@ -49,6 +49,15 @@ template < class Key,                                     // map::key_type
             // size_type _size;
             key_compare _compare;
             allocator_type _allocator;
+        public:
+            void insert(value_type value)
+            {
+                _tree.insert(value);
+            }
+            void print()
+            {
+                _tree.print_it(_tree);
+            }
     };
 }
 

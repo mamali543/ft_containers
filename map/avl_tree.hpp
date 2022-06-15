@@ -1,7 +1,12 @@
 #ifndef AVL_TREE_HPP
 #define AVL_TREE_HPP
 
+#define DEFAULT "\e[0;37m"
+#define GREEN "\e[1;32m"
+#define RED "\e[1;31m"
+
 #include <iostream>
+#include "../utils/pair.hpp"
 
 namespace ft{
     template <typename Pair>
@@ -84,7 +89,7 @@ namespace ft{
                 while (tmp && node == tmp->_left)
                 {
                     node = tmp;
-                    tmp = node->_parent
+                    tmp = node->_parent;
                 }
                 node = tmp;
             }
@@ -98,7 +103,7 @@ namespace ft{
         > class avl_tree
     {
     public:
-        typedef Mapped_Type mapped_type;
+        typedef T mapped_type;
         typedef Alloc allocator_type;
         typedef Key key_type;
         typedef ft::pair<const key_type, mapped_type> value_type;
@@ -111,6 +116,18 @@ namespace ft{
     private:
         size_type _size;
         Compare _compare;
+        bool __exists(node_type    *node, key_type k)const
+        {
+            if (!node)
+                return (false);
+            else if(equal(node->_data->first, k))
+                return (true);
+            else if (_compare(node->_data->first, k))
+                return (__exists(node->_right, k));
+            else
+                return(__exists(node->_left, k));
+
+        }
         allocator_type _pair_allocator;
         node_allocator _node_allocator;
 
@@ -137,12 +154,8 @@ namespace ft{
             return _root->_height;
         }
 
-        bool exists(key_type elem) const 
-        {
-            return (__exists(_root, elem));
-        }
 
-        bool equal(const key_type &keya, const key_type &keyb)
+        bool equal(const key_type &keya, const key_type &keyb) const
         {
             return(_compare(keya, keyb) == false && _compare(keyb, keya) == false);
         }
@@ -161,18 +174,6 @@ namespace ft{
             return (node);
         }
 
-        bool exist(node_type    *node, key_type k)
-        {
-            if (!node)
-                return (false);
-            else if(equal(node->_data->first, k))
-                return (true);
-            else if (_compare(node->_data->first, k))
-                return (exist(node->_right, k));
-            else
-                return(exist(node->_left, k));
-
-        }
 
         void swap(avl_tree &other)
         {
@@ -182,7 +183,11 @@ namespace ft{
         }
 
     public:
-        avl_tree() : _root(NULL), _size(0), _compare(), _pair_allocator(), node_allocator() {}
+        bool exists(key_type elem) const 
+        {
+            return (__exists(_root, elem));
+        }
+        avl_tree() : _root(NULL), _size(0), _compare(), _node_allocator(), _pair_allocator() {}
 
         avl_tree(const avl_tree &other) : _root(NULL), _size(other._size)
         {
@@ -213,7 +218,7 @@ namespace ft{
                 node->_right = NULL;
                 _pair_allocator.destroy(node->_data);
                 _pair_allocator.deallocate(node->_data, 1);
-                node_allocator.dellocate(node, 1);
+                _node_allocator.deallocate(node, 1);
             }
             node = NULL;
         }
@@ -229,6 +234,7 @@ namespace ft{
         }
 
         /*                 Search                   */
+
         Node<T> *search(Node<T> *node, key_type key)
         {
             if (!node)
@@ -246,9 +252,9 @@ namespace ft{
         /*                 Insert                   */
         node_type   *newNode(value_type x)
         {
-            node_type *tmp = node_allocator.alloc(1);
-            tmp->_data = _pair_allocator.allocate(1);
-            _pair_allocator.construct(tmp->_data, x);
+            node_type *tmp = _node_allocator.allocate(1);
+        _pair_allocator.allocate(1);
+           tmp->_data = &x;
             tmp->_left = NULL;
             tmp->_right = NULL;
             tmp->_parent = NULL;
@@ -267,6 +273,7 @@ namespace ft{
 
         node_type *insert(node_type *node, value_type x)
         {
+            std::cout << "yooooooo\n";
             if (node == NULL)
                 return (newNode(x));
             if (_compare(node->_data->first, x.first))
@@ -280,13 +287,12 @@ namespace ft{
                 node->_left->_parent = node;
             }
             update(node);
+            return balance(node);
         }
 
         bool    insert(value_type x)
         {
-            if (x == NULL)
-                return (false);
-            if (!exist(x.first))
+            if (!exists(x.first))
             {
                 _root = insert(_root, x);
                 _size++;
@@ -363,14 +369,14 @@ namespace ft{
             }
             return (node);
         }
-
-        /*                 Remove                   */
+        /*           
+              Remove                   */
         node_type *remove(node_type *node, key_type key)
         {
             if (node == NULL)
                 return (NULL);
             if (_compare(node->_data->first, key))
-                node->_right = remove(node->_right, key)
+                node->_right = remove(node->_right, key);
             else if (_compare(key, node->_data->first))
                 node->_left = remove(node->_left, key);
             else
@@ -383,7 +389,7 @@ namespace ft{
                     _pair_allocator.destroy(node->_right->_data);
                     _pair_allocator.deallocate(node->_right->_data, 1);
                     _node_allocator.deallocate(node->_right, 1);
-                    node->_right = NULL
+                    node->_right = NULL;
                 }
                 else if (node->_left && !node->_right)
                 {
@@ -397,7 +403,7 @@ namespace ft{
                 }
                 else if(!node->_left && !node->_right)
                 {
-                    _pair_allocator.destroy(node->_data)
+                    _pair_allocator.destroy(node->_data);
                     _pair_allocator.deallocate(node->_data, 1);
                     _node_allocator.deallocate(node, 1);
                     node = NULL;
@@ -421,6 +427,33 @@ namespace ft{
             _root = remove(_root, key);
             _size--;
             return true;
+        }
+
+        void printTree(node_type *node, std::string indent, bool last)
+        {
+            (void)last;
+            if (node != NULL)
+            {
+                std::cout << RED << indent << DEFAULT;
+                if (last)
+                {
+                    std::cout << GREEN << "R---- " << DEFAULT;
+                    indent += "   ";
+                }
+                else
+                {
+                    std::cout << RED << "L---- " << DEFAULT;
+                    indent += "|  ";
+                }
+                std::cout << node->_data->first << std::endl;
+                printTree(node->_left, indent, false);
+                printTree(node->_right, indent, true);
+            }
+        }
+
+        void print_it(avl_tree<int, int> &tree)
+        {
+            tree.printTree(tree._root, "", true);
         }
 
     };

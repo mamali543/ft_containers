@@ -56,7 +56,14 @@ template < class Key,                                     // map::key_type
             }
             void print()
             {
+            std::cout << "hey\n";
+
                 _tree.print_it(_tree);
+            }
+
+            void remove(value_type value)
+            {
+                _tree.remove(value.first);
             }
     };
 }

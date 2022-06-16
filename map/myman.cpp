@@ -42,6 +42,9 @@ int main()
     // map.insert(ft::make_pair(14, 53));
     // map.insert(ft::make_pair(13, 300));
     // map.print();
+        std::cout << "Preorder traversal of the "
+            "constructed AVL tree is \n";
+    map.preOrder();
 
 
     // std::cout << "wele weleee\n";

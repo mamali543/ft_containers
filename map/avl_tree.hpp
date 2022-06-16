@@ -347,6 +347,47 @@ namespace ft{
                 printTree(node->_right, indent, true);
             }
         }
+        void preOrder(node_type *root)
+        {
+            if(root != NULL)
+            {
+                std::cout << root->_data->first << " ";
+                preOrder(root->_left);
+                preOrder(root->_right);
+            }
+        }
+        
+        // Driver Code
+        void print2DUtil(node_type *root, int space)
+        {
+            // Base case
+            if (root == NULL)
+                return;
+        
+            // Increase distance between levels
+            space += 10;
+        
+            // Process right child first
+            print2DUtil(root->_left, space);
+        
+            // Print current node after space
+            // 10
+            std::cout<<std::endl;
+            for (int i = 10; i < space; i++)
+                std::cout<<" ";
+            std::cout<<root->_data->first<<"\n";
+        
+            // Process left child
+            print2DUtil(root->_right, space);
+        }
+
+        void    print2DUtil()
+        {
+                std::cout << "SIZE: " << this->_size << std::endl;
+                std::cout << "\n\n";
+                print2DUtil(this->_root, 1); 
+                std::cout << "\n\n";
+        }
 
         void printBT(const std::string& prefix, const node_type *_node, bool isLeft)
         {
@@ -381,8 +422,8 @@ namespace ft{
         node_type *remove(node_type *node, key_type key)
         {
                 // std::cout << "hey\n";
-            // if (node == NULL)
-            //     return (NULL);
+            if (node == NULL)
+                return (NULL);
             
             if (_compare(node->_data->first, key))
                 node->_right = remove(node->_right, key);
@@ -541,10 +582,7 @@ namespace ft{
         //     std::swap(_root, other._root);
         //     std::swap(_compare, other._compare);
         // }
-        /*           
-              Remove                   */
-
-
+        /*                Remove                   */
     };
 }
 

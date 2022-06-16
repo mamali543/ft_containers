@@ -55,18 +55,20 @@ template < class Key,                                     // map::key_type
             {
 
             }
+
             void insert(value_type value)
             {
                 _tree.insert(value);
             }
-            // void iinsert(value_type value)
-            // {
-            //     _tree.insert(_tree._root, value->first);
-            // }
+
+            void preOrder()
+            {
+                _tree.preOrder(_tree._root);
+            }
+
             void print()
             {
-
-                _tree.printBT();
+                _tree.print2DUtil();
             }
 
             void remove(key_type value)
@@ -78,12 +80,10 @@ template < class Key,                                     // map::key_type
             {
                 return (_tree.size());
             }
+
             node_type* search(key_type x)
             {
                 node_type* test =  _tree.search(_tree._root, x);
-                // std::cout << "first _data->" << tmp->_data->first << "second " << tmp->_data->second;
-                // std::cout << tmp;
-                
                 return (test);
             }
     };

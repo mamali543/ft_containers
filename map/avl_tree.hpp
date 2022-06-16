@@ -9,6 +9,9 @@
 #include "../utils/pair.hpp"
 
 namespace ft{
+
+
+
     template <typename Pair>
     class Node
     {
@@ -23,83 +26,10 @@ namespace ft{
         ~Node() {}
     };
 
-    template <class T>
-    Node<T> *min_node(Node<T> *node)
-    {
-        if (!node)
-            return(node);
-        while (node->_left)
-            node = node->_left;
-        return (node);
-    }
-
-    template <class T>
-    Node<T> *max_node(Node<T> *node)
-    {
-        if (!node)
-            return (node);
-        while (node->_right)
-            node = node->_right;
-        return (node);
-    }
-
-    template <class T>
-    Node<T> *increment(Node<T> *node, Node<T> *root)
-    {
-        if (!node)
-            node = min_node(root);
-        else
-        {
-            if (node->_right)
-            {
-                node = node->_right;
-                while (node->_left)
-                    node = node->_left;
-            }
-            else
-            {
-                Node<T> *tmp = node->_parent;
-                while (tmp && node == tmp->_right)
-                {
-                    node = tmp;
-                    tmp = node->_parent;
-                }
-                node = tmp;
-            }
-        }
-        return(node);
-    }
-
-    template <class T>
-    Node<T> *decrement(Node<T> *node, Node<T> *root)
-    {
-        if (!node)
-            node = max_node(root);
-        else
-        {
-            if (node->_left)
-            {
-                node = node->_left;
-                while (node->_right)
-                    node = node->_left;
-            }
-            else
-            {
-                Node<T> *tmp = node->_parent;
-                while (tmp && node == tmp->_left)
-                {
-                    node = tmp;
-                    tmp = node->_parent;
-                }
-                node = tmp;
-            }
-        }
-        return(node);
-    }
     template < class Key,                                     // map::key_type
         class T,                                       // map::mapped_type
         class Compare = std::less<Key>,                     // map::key_compare
-        class Alloc = std::allocator<std::pair<const Key,T> >    // map::allocator_type
+        class Alloc = std::allocator<ft::pair<const Key,T> >    // map::allocator_type
         > class avl_tree
     {
     public:
@@ -121,115 +51,20 @@ namespace ft{
 
         bool __exists(node_type    *node, key_type k)const
         {
-            if (!node)
+
+            if (node == NULL)
                 return (false);
-            else if(equal(node->_data->first, k))
+            
+            if(equal(node->_data->first, k))
                 return (true);
-            else if (_compare(node->_data->first, k))
+            if (_compare(k , node->_data->first ))
                 return (__exists(node->_right, k));
             else
                 return(__exists(node->_left, k));
-
-        }
-
-        /*                 help methods                   */
-        node_type *remove(node_type *node, key_type key)
-        {
-            if (node == NULL)
-                return (NULL);
-            if (_compare(node->_data->first, key))
-                node->_right = remove(node->_right, key);
-            else if (_compare(key, node->_data->first))
-                node->_left = remove(node->_left, key);
-            else
-            {
-                if (!node->_left && node->_right)
-                {
-                    node->_right->_parent = node->_parent;
-                    _pair_allocator.destroy(node->_data);
-                    _pair_allocator.construct(node->_data,*( node->_right->_data));
-                    _pair_allocator.destroy(node->_right->_data);
-                    _pair_allocator.deallocate(node->_right->_data, 1);
-                    _node_allocator.deallocate(node->_right, 1);
-                    node->_right = NULL;
-                }
-                else if (node->_left && !node->_right)
-                {
-                    node->_left->_parent = node->_parent;
-                    _pair_allocator.destroy(node->_data);
-                    _pair_allocator.construct(node->_data, *(node->_left->_data));
-                    _pair_allocator.destory(node->_left->_data, 1);
-                    _pair_allocator.deallocate(node->_left->_data, 1);
-                    _node_allocator.deallocate(node->_left, 1);
-                    node->_left = NULL;
-                }
-                else if(!node->_left && !node->_right)
-                {
-                    _pair_allocator.destroy(node->_data);
-                    _pair_allocator.deallocate(node->_data, 1);
-                    _node_allocator.deallocate(node, 1);
-                    node = NULL;
-                }
-                else
-                {
-                    node_type   *n = min_node(node->_right);
-                    _pair_allocator.destroy(node->_data);
-                    _pair_allocator.construct(node->_data, *(n->_data));
-                    node->_right = remove(node->_right, n->_data->first);
-                }
-            }
-            update(node);
-            return(balance(node));
-        }
-        
-        int tree_height(node_type* node) 
-        {
-            if (!node)
-                return 0;
-            else {
-                int left_height = tree_height(node->left);
-                int right_height = tree_height(node->right);
-                if (left_height >= right_height)
-                    return left_height + 1;
-                else
-                    return right_height + 1;
-            }
-        }
-
-        int height() const
-        {
-            if (_root == NULL)
-                return 0;
-            return _root->_height;
+            return (false);
         }
 
 
-        bool equal(const key_type &keya, const key_type &keyb) const
-        {
-            return(_compare(keya, keyb) == false && _compare(keyb, keya) == false);
-        }
-
-        node_type   *max(node_type *node)const
-        {
-            while (node->_right)
-                node = node->_right;
-            return (node);
-        }
-
-        node_type   *min(node_type *node)const
-        {
-            while (node->_left)
-                node = node->_left;
-            return (node);
-        }
-
-
-        void swap(avl_tree &other)
-        {
-            std::swap(_size, other._size);
-            std::swap(_root, other._root);
-            std::swap(_compare, other._compare);
-        }
 
     public:
         bool exists(key_type elem) const 
@@ -282,28 +117,56 @@ namespace ft{
             }
         }
 
-        /*                 Search                   */
-
-        Node<T> *search(Node<T> *node, key_type key)
+        int tree_height(node_type* node) 
         {
             if (!node)
-                return (NULL);
-            if (node->_data->first == key)
+                return 0;
+            else {
+                int left_height = tree_height(node->left);
+                int right_height = tree_height(node->right);
+                if (left_height >= right_height)
+                    return left_height + 1;
+                else
+                    return right_height + 1;
+            }
+        }
+
+        int height() const
+        {
+            if (_root == NULL)
+                return 0;
+            return _root->_height;
+        }
+
+
+        bool equal(const key_type &keya, const key_type &keyb) const
+        {
+            return(_compare(keya, keyb) == false && _compare(keyb, keya) == false);
+        }
+
+        /*                 Search                   */
+
+        node_type* search(node_type *node, key_type key)
+        {
+            if (node == NULL)
+                return (node);
+            if (equal(key, node->_data->first))
                 return (node);
             else
             {
-                if (_compare(node->_data->first, key))
-                    return(search(node->_left, key));
-                else
+                if (!_compare(node->_data->first, key))
                     return(search(node->_right, key));
+                else
+                    return(search(node->_left, key));
             }
+            return (NULL);
         }
         /*                 Insert                   */
         node_type   *newNode(value_type x)
         {
             node_type *tmp = _node_allocator.allocate(1);
-        _pair_allocator.allocate(1);
-           tmp->_data = &x;
+            tmp->_data = _pair_allocator.allocate(1);
+             _pair_allocator.construct(tmp->_data, x);
             tmp->_left = NULL;
             tmp->_right = NULL;
             tmp->_parent = NULL;
@@ -322,18 +185,18 @@ namespace ft{
 
         node_type *insert(node_type *node, value_type x)
         {
-            // std::cout << "yooooooo\n";
+            // std::std::cout << "yooooooo\n";
             if (node == NULL)
                 return (newNode(x));
-            if (_compare(node->_data->first, x.first))
-            {
-                node->_right = insert(node->_right, x);
-                node->_right->_parent = node;
-            }
-            else if (_compare(x.first, node->_data->first))
+            if (!_compare(x.first, node->_data->first))
             {
                 node->_left = insert(node->_left, x);
                 node->_left->_parent = node;
+            }
+            else
+            {
+                node->_right = insert(node->_right, x);
+                node->_right->_parent = node;
             }
             update(node);
             return balance(node);
@@ -341,6 +204,7 @@ namespace ft{
 
         bool    insert(value_type x)
         {
+            // std::cout << x.first << std::endl;
             if (!exists(x.first))
             {
                 _root = insert(_root, x);
@@ -350,47 +214,87 @@ namespace ft{
             return (false);
         }
         /*                 Balance                   */
-        node_type *right_rotate(node_type *node)
-        {
-            node_type *tmp = node->_left;
+    //     node_type *right_rotate(node_type *node)
+    //     {
+    //         node_type *tmp = node->_left;
 
-            // tmp = tmp->_right;
-            if (tmp->_right)
-                tmp->_right->_parent = node;
-            node->_parent = tmp;
-            if (!node->_parent)
-                _root = tmp;
-            else if (node == node->_parent->_left)
-                node->_parent->_left = tmp;
-            else
-                node->_parent->_right = tmp;
-            tmp->_right = node;
-            tmp->_parent = node->_parent;
-            update(node);
-            update(tmp);
-            return (tmp);
-        }
+    //         // tmp = tmp->_right;
+    //         if (tmp->_right)
+    //             tmp->_right->_parent = node;
+    //         node->_parent = tmp;
+    //         if (!node->_parent)
+    //             _root = tmp;
+    //         else if (node == node->_parent->_left)
+    //             node->_parent->_left = tmp;
+    //         else
+    //             node->_parent->_right = tmp;
+    //         tmp->_right = node;
+    //         tmp->_parent = node->_parent;
+    //         update(node);
+    //         update(tmp);
+    //         return (tmp);
+    //     }
 
-        node_type *left_rotate(node_type *node)
-        {
-            node_type *tmp = node->_right;
-    // std::cout << "wele weleee\n";
-            // tmp = tmp->_left;
-            if (tmp->_left)
-                tmp->_left->_parent = node;
-            node->_parent = tmp;
-            if (!node->_parent)
-                _root = tmp;
-            else if (node == node->_parent->_left)
-                node->_parent->_left = tmp;
-            else
-                node->_parent->_right = tmp;
-            tmp->_left = node;
-            tmp->_parent = node->_parent;
-            update(node);
-            update(tmp);
-            return (tmp);
-        }
+    //     node_type *left_rotate(node_type *node)
+    //     {
+    //         node_type *tmp = node->_right;
+    // // std::cout << "wele weleee\n";
+    //         // tmp = tmp->_left;
+    //         if (tmp->_left)
+    //             tmp->_left->_parent = node;
+    //         node->_parent = tmp;
+    //         if (!node->_parent)
+    //             _root = tmp;
+    //         else if (node == node->_parent->_left)
+    //             node->_parent->_left = tmp;
+    //         else
+    //             node->_parent->_right = tmp;
+    //         tmp->_left = node;
+    //         tmp->_parent = node->_parent;
+    //         update(node);
+    //         update(tmp);
+    //         return (tmp);
+    //     }
+        node_type* right_rotate(node_type* node)
+            {
+                node_type *tmp = node->_left;
+                node->_left = tmp->_right;
+                if (tmp->_right != NULL)
+                    tmp->_right->_parent = node;
+                tmp->_right = node;
+                tmp->_parent = node->_parent;
+                node->_parent = tmp;
+                if (tmp->_parent != NULL)
+                {
+                    if( _compare(node->_data->first, tmp->_parent->_data->first) == true)
+                        tmp->_parent->_left = tmp;
+                    if( _compare(tmp->_parent->_data->first, node->_data->first) == true)
+                        tmp->_parent->_right = tmp;
+                }
+                update(node);
+                update(tmp);
+                return tmp;
+            }
+            node_type *left_rotate(node_type* node)
+            {
+                node_type *tmp = node->_right;
+                node->_right = tmp->_left;
+                if (tmp->_left != NULL)
+                    tmp->_left->_parent = node;
+                tmp->_left = node;
+                tmp->_parent = node->_parent;
+                node->_parent = tmp;
+                if (tmp->_parent != NULL)
+                {
+                    if( _compare(node->_data->first, tmp->_parent->_data->first) == true)
+                        tmp->_parent->_left = tmp;
+                    if( _compare(tmp->_parent->_data->first, node->_data->first) == true)
+                        tmp->_parent->_right = tmp;
+                }
+                update(node);
+                update(tmp);
+                return tmp;
+            }
 
         node_type *lr_rotate(node_type *node)
         {
@@ -409,34 +313,26 @@ namespace ft{
             if (node->_balance_factor < -1)
             {
                 if (node->_left->_balance_factor <= 0)
-                    return (left_rotate(node));
+                    return (right_rotate(node));
                 else
                     return(lr_rotate(node));
             }
             else if(node->_balance_factor > 1)
             {
                 if (node->_right->_balance_factor >= 0)
-                    return(right_rotate(node));
+                    return(left_rotate(node));
                 else
                     return (rl_rotate(node));
             }
             return (node);
         }
-        /*           
-              Remove                   */
 
-        bool remove(key_type key)
-        {
-            if (!exists(key))
-                return false;
-            _root = remove(_root, key);
-            _size--;
-            return true;
-        }
 
         void printTree(node_type *node, std::string indent, bool last)
         {
             (void)last;
+                std::cout << "yooooo " <<  node->_data->first << std::endl;
+
             if (node != NULL)
             {
                 std::cout << RED << indent << DEFAULT;
@@ -455,11 +351,197 @@ namespace ft{
                 printTree(node->_right, indent, true);
             }
         }
+        void printBT(const std::string& prefix, const node_type *_node, bool isLeft)
+            {
 
-        void print_it(avl_tree<int, int> &tree)
+
+                if( _node != NULL )
+                {
+                    // std::cout << "salam\n";
+                    std::cout << prefix;
+                    std::cout << (_node->_parent == NULL? "\e[1;35m[R]" : (isLeft ? "\e[1;32m├──[L]" : "\e[1;34m└──[R]"));
+                    std::cout << "[" << _node->_data->first << "]\n";
+                    printBT( prefix + (isLeft ? "│   " : "   "), _node->_left, true);
+                    printBT( prefix + (isLeft ? "│   " : "   "), _node->_right, false);
+                    // if (_node->parent != NULL )
+                    //     std::cout <<"node : " << _node->data->first << " parent : " << _node->parent->data->first << "\n";
+                }
+            else 
+                return;
+
+            }
+
+            void printBT()
+            { 
+                std::cout << "SIZE: " << this->_size << std::endl;
+                std::cout << "\n\n";
+
+                printBT("", this->_root, false); 
+                std::cout << "\n\n";
+
+            }
+
+        int     size()
         {
-            tree.printTree(tree._root, "", true);
+            return (this->_size);
         }
+    // template <class T>
+    // Node<T> *min_node(Node<T> *node)
+    // {
+    //     if (!node)
+    //         return(node);
+    //     while (node->_left)
+    //         node = node->_left;
+    //     return (node);
+    // }
+
+    // template <class T>
+    // Node<T> *max_node(Node<T> *node)
+    // {
+    //     if (!node)
+    //         return (node);
+    //     while (node->_right)
+    //         node = node->_right;
+    //     return (node);
+    // }
+
+    // template <class T>
+    // Node<T> *increment(Node<T> *node, Node<T> *root)
+    // {
+    //     if (!node)
+    //         node = min_node(root);
+    //     else
+    //     {
+    //         if (node->_right)
+    //         {
+    //             node = node->_right;
+    //             while (node->_left)
+    //                 node = node->_left;
+    //         }
+    //         else
+    //         {
+    //             Node<T> *tmp = node->_parent;
+    //             while (tmp && node == tmp->_right)
+    //             {
+    //                 node = tmp;
+    //                 tmp = node->_parent;
+    //             }
+    //             node = tmp;
+    //         }
+    //     }
+    //     return(node);
+    // }
+
+    // template <class T>
+    // Node<T> *decrement(Node<T> *node, Node<T> *root)
+    // {
+    //     if (!node)
+    //         node = max_node(root);
+    //     else
+    //     {
+    //         if (node->_left)
+    //         {
+    //             node = node->_left;
+    //             while (node->_right)
+    //                 node = node->_left;
+    //         }
+    //         else
+    //         {
+    //             Node<T> *tmp = node->_parent;
+    //             while (tmp && node == tmp->_left)
+    //             {
+    //                 node = tmp;
+    //                 tmp = node->_parent;
+    //             }
+    //             node = tmp;
+    //         }
+    //     }
+    //     return(node);
+    // }
+        /*                 help methods                   */
+        // node_type *remove(node_type *node, key_type key)
+        // {
+        //     if (node == NULL)
+        //         return (NULL);
+        //     if (_compare(node->_data->first, key))
+        //         node->_right = remove(node->_right, key);
+        //     else if (_compare(key, node->_data->first))
+        //         node->_left = remove(node->_left, key);
+        //     else
+        //     {
+        //         if (!node->_left && node->_right)
+        //         {
+        //             node->_right->_parent = node->_parent;
+        //             _pair_allocator.destroy(node->_data);
+        //             _pair_allocator.construct(node->_data,*( node->_right->_data));
+        //             _pair_allocator.destroy(node->_right->_data);
+        //             _pair_allocator.deallocate(node->_right->_data, 1);
+        //             _node_allocator.deallocate(node->_right, 1);
+        //             node->_right = NULL;
+        //         }
+        //         else if (node->_left && !node->_right)
+        //         {
+        //             node->_left->_parent = node->_parent;
+        //             _pair_allocator.destroy(node->_data);
+        //             _pair_allocator.construct(node->_data, *(node->_left->_data));
+        //             _pair_allocator.destory(node->_left->_data, 1);
+        //             _pair_allocator.deallocate(node->_left->_data, 1);
+        //             _node_allocator.deallocate(node->_left, 1);
+        //             node->_left = NULL;
+        //         }
+        //         else if(!node->_left && !node->_right)
+        //         {
+        //             _pair_allocator.destroy(node->_data);
+        //             _pair_allocator.deallocate(node->_data, 1);
+        //             _node_allocator.deallocate(node, 1);
+        //             node = NULL;
+        //         }
+        //         else
+        //         {
+        //             node_type   *n = min_node(node->_right);
+        //             _pair_allocator.destroy(node->_data);
+        //             _pair_allocator.construct(node->_data, *(n->_data));
+        //             node->_right = remove(node->_right, n->_data->first);
+        //         }
+        //     }
+        //     update(node);
+        //     return(balance(node));
+        // }
+        
+
+
+        // node_type   *max(node_type *node)const
+        // {
+        //     while (node->_right)
+        //         node = node->_right;
+        //     return (node);
+        // }
+
+        // node_type   *min(node_type *node)const
+        // {
+        //     while (node->_left)
+        //         node = node->_left;
+        //     return (node);
+        // }
+
+
+        // void swap(avl_tree &other)
+        // {
+        //     std::swap(_size, other._size);
+        //     std::swap(_root, other._root);
+        //     std::swap(_compare, other._compare);
+        // }
+        /*           
+              Remove                   */
+
+        // bool remove(key_type key)
+        // {
+        //     if (!exists(key))
+        //         return false;
+        //     _root = remove(_root, key);
+        //     _size--;
+        //     return true;
+        // }
 
     };
 }

@@ -9,7 +9,7 @@ namespace ft{
 template < class Key,                                     // map::key_type
            class T,                                       // map::mapped_type
            class Compare = std::less<Key>,                     // map::key_compare
-           class Alloc = std::allocator<std::pair<const Key,T> >    // map::allocator_type
+           class Alloc = std::allocator<ft::pair<const Key,T> >    // map::allocator_type
            > class map
     {
         public:
@@ -38,6 +38,7 @@ template < class Key,                                     // map::key_type
             // typedef bool result_type;
             // typedef value_type first_argument_type;
             // typedef value_type second_argument_type;
+           
             bool operator() (const value_type& x, const value_type& y) const
             {
                 return _compare(x.first, y.first);
@@ -50,20 +51,40 @@ template < class Key,                                     // map::key_type
             key_compare _compare;
             allocator_type _allocator;
         public:
+             map(): _tree() , _compare(), _allocator()
+            {
+
+            }
             void insert(value_type value)
             {
                 _tree.insert(value);
             }
+            // void iinsert(value_type value)
+            // {
+            //     _tree.insert(_tree._root, value->first);
+            // }
             void print()
             {
-            std::cout << "hey\n";
 
-                _tree.print_it(_tree);
+                _tree.printBT();
             }
 
             void remove(value_type value)
             {
                 _tree.remove(value.first);
+            }
+        
+            int size()
+            {
+                return (_tree.size());
+            }
+            node_type* search(key_type x)
+            {
+                node_type* test =  _tree.search(_tree._root, x);
+                // std::cout << "first _data->" << tmp->_data->first << "second " << tmp->_data->second;
+                // std::cout << tmp;
+                
+                return (test);
             }
     };
 }

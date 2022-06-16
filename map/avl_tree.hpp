@@ -51,13 +51,11 @@ namespace ft{
 
         bool __exists(node_type    *node, key_type k)const
         {
-
             if (node == NULL)
-                return (false);
-            
+                return (false);   
             if(equal(node->_data->first, k))
                 return (true);
-            if (_compare(k , node->_data->first ))
+            if (!_compare(k , node->_data->first ))
                 return (__exists(node->_right, k));
             else
                 return(__exists(node->_left, k));
@@ -188,7 +186,7 @@ namespace ft{
             // std::std::cout << "yooooooo\n";
             if (node == NULL)
                 return (newNode(x));
-            if (!_compare(x.first, node->_data->first))
+            else if (_compare(x.first, node->_data->first))
             {
                 node->_left = insert(node->_left, x);
                 node->_left->_parent = node;
@@ -204,7 +202,6 @@ namespace ft{
 
         bool    insert(value_type x)
         {
-            // std::cout << x.first << std::endl;
             if (!exists(x.first))
             {
                 _root = insert(_root, x);
@@ -327,7 +324,6 @@ namespace ft{
             return (node);
         }
 
-
         void printTree(node_type *node, std::string indent, bool last)
         {
             (void)last;
@@ -351,31 +347,27 @@ namespace ft{
                 printTree(node->_right, indent, true);
             }
         }
+
         void printBT(const std::string& prefix, const node_type *_node, bool isLeft)
+        {
+            if( _node != NULL )
             {
-
-
-                if( _node != NULL )
-                {
-                    // std::cout << "salam\n";
-                    std::cout << prefix;
-                    std::cout << (_node->_parent == NULL? "\e[1;35m[R]" : (isLeft ? "\e[1;32m├──[L]" : "\e[1;34m└──[R]"));
-                    std::cout << "[" << _node->_data->first << "]\n";
-                    printBT( prefix + (isLeft ? "│   " : "   "), _node->_left, true);
-                    printBT( prefix + (isLeft ? "│   " : "   "), _node->_right, false);
-                    // if (_node->parent != NULL )
-                    //     std::cout <<"node : " << _node->data->first << " parent : " << _node->parent->data->first << "\n";
-                }
-            else 
-                return;
-
+                std::cout << prefix;
+                std::cout << (_node->_parent == NULL? "\e[1;35m[R]" : (isLeft ? "\e[1;32m├──[L]" : "\e[1;34m└──[R]"));
+                std::cout << "[" << _node->_data->second << "]\n";
+                printBT( prefix + (isLeft ? "│   " : "   "), _node->_left, true);
+                printBT( prefix + (isLeft ? "│   " : "   "), _node->_right, false);
+                // if (_node->parent != NULL )
+                //     std::cout <<"node : " << _node->data->first << " parent : " << _node->parent->data->first << "\n";
             }
+        else 
+            return;
+        }
 
             void printBT()
             { 
                 std::cout << "SIZE: " << this->_size << std::endl;
                 std::cout << "\n\n";
-
                 printBT("", this->_root, false); 
                 std::cout << "\n\n";
 
@@ -385,15 +377,81 @@ namespace ft{
         {
             return (this->_size);
         }
-    // template <class T>
-    // Node<T> *min_node(Node<T> *node)
-    // {
-    //     if (!node)
-    //         return(node);
-    //     while (node->_left)
-    //         node = node->_left;
-    //     return (node);
-    // }
+
+        node_type *remove(node_type *node, key_type key)
+        {
+                // std::cout << "hey\n";
+            // if (node == NULL)
+            //     return (NULL);
+            
+            if (_compare(node->_data->first, key))
+                node->_right = remove(node->_right, key);
+            else if (_compare(key, node->_data->first))
+            {
+                node->_left = remove(node->_left, key);
+            }
+            else
+            {
+                if (!node->_left && node->_right)
+                {
+                    node->_right->_parent = node->_parent;
+                    _pair_allocator.destroy(node->_data);
+                    _pair_allocator.construct(node->_data,*( node->_right->_data));
+                    _pair_allocator.destroy(node->_right->_data);
+                    _pair_allocator.deallocate(node->_right->_data, 1);
+                    _node_allocator.deallocate(node->_right, 1);
+                    node->_right = NULL;
+                }
+                else if (node->_left && !node->_right)
+                {
+                    node->_left->_parent = node->_parent;
+                    _pair_allocator.destroy(node->_data);
+                    _pair_allocator.construct(node->_data, *(node->_left->_data));
+                    _pair_allocator.destroy(node->_left->_data);
+                    _pair_allocator.deallocate(node->_left->_data, 1);
+                    _node_allocator.deallocate(node->_left, 1);
+                    node->_left = NULL;
+                }
+                else if(!node->_left && !node->_right)
+                {
+                    _pair_allocator.destroy(node->_data);
+                    _pair_allocator.deallocate(node->_data, 1);
+                    _node_allocator.deallocate(node, 1);
+                    node = NULL;
+                    return(NULL);
+                }
+                else
+                {
+                    node_type   *n = min_node(node->_right);
+                    _pair_allocator.destroy(node->_data);
+                    _pair_allocator.construct(node->_data, *(n->_data));
+                    node->_right = remove(node->_right, n->_data->first);
+                }
+            }
+            update(node);
+            return(balance(node));
+        }
+
+        bool remove(key_type key)
+        {
+
+            if (!exists(key))
+                return false;
+            // std::cout << "hey\n";
+        
+            _root = remove(_root, key);
+            _size--;
+            return true;
+        }
+    template <class U>
+    Node<U> *min_node(Node<U> *node)
+    {
+        if (!node)
+            return(node);
+        while (node->_left)
+            node = node->_left;
+        return (node);
+    }
 
     // template <class T>
     // Node<T> *max_node(Node<T> *node)
@@ -459,54 +517,6 @@ namespace ft{
     //     return(node);
     // }
         /*                 help methods                   */
-        // node_type *remove(node_type *node, key_type key)
-        // {
-        //     if (node == NULL)
-        //         return (NULL);
-        //     if (_compare(node->_data->first, key))
-        //         node->_right = remove(node->_right, key);
-        //     else if (_compare(key, node->_data->first))
-        //         node->_left = remove(node->_left, key);
-        //     else
-        //     {
-        //         if (!node->_left && node->_right)
-        //         {
-        //             node->_right->_parent = node->_parent;
-        //             _pair_allocator.destroy(node->_data);
-        //             _pair_allocator.construct(node->_data,*( node->_right->_data));
-        //             _pair_allocator.destroy(node->_right->_data);
-        //             _pair_allocator.deallocate(node->_right->_data, 1);
-        //             _node_allocator.deallocate(node->_right, 1);
-        //             node->_right = NULL;
-        //         }
-        //         else if (node->_left && !node->_right)
-        //         {
-        //             node->_left->_parent = node->_parent;
-        //             _pair_allocator.destroy(node->_data);
-        //             _pair_allocator.construct(node->_data, *(node->_left->_data));
-        //             _pair_allocator.destory(node->_left->_data, 1);
-        //             _pair_allocator.deallocate(node->_left->_data, 1);
-        //             _node_allocator.deallocate(node->_left, 1);
-        //             node->_left = NULL;
-        //         }
-        //         else if(!node->_left && !node->_right)
-        //         {
-        //             _pair_allocator.destroy(node->_data);
-        //             _pair_allocator.deallocate(node->_data, 1);
-        //             _node_allocator.deallocate(node, 1);
-        //             node = NULL;
-        //         }
-        //         else
-        //         {
-        //             node_type   *n = min_node(node->_right);
-        //             _pair_allocator.destroy(node->_data);
-        //             _pair_allocator.construct(node->_data, *(n->_data));
-        //             node->_right = remove(node->_right, n->_data->first);
-        //         }
-        //     }
-        //     update(node);
-        //     return(balance(node));
-        // }
         
 
 
@@ -534,14 +544,6 @@ namespace ft{
         /*           
               Remove                   */
 
-        // bool remove(key_type key)
-        // {
-        //     if (!exists(key))
-        //         return false;
-        //     _root = remove(_root, key);
-        //     _size--;
-        //     return true;
-        // }
 
     };
 }

@@ -69,9 +69,9 @@ template < class Key,                                     // map::key_type
                 _tree.printBT();
             }
 
-            void remove(value_type value)
+            void remove(key_type value)
             {
-                _tree.remove(value.first);
+                _tree.remove(value);
             }
         
             int size()

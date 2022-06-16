@@ -7,7 +7,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 
 # This program built for i386-apple-darwin11.3.0
 
-# Make data base, printed on Wed Jun 15 03:24:58 2022
+# Make data base, printed on Thu Jun 16 05:42:52 2022
 
 # Variables
 
@@ -15,6 +15,10 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 <D = $(patsubst %/,%,$(dir $<))
 # automatic
 ?F = $(notdir $?)
+# environment
+ELECTRON_NO_ATTACH_CONSOLE = 1
+# environment
+LC_CTYPE = UTF-8
 # environment
 VSCODE_LOG_NATIVE = false
 # automatic
@@ -24,7 +28,7 @@ VSCODE_LOG_NATIVE = false
 # automatic
 @F = $(notdir $@)
 # makefile
-CURDIR := /Users/mamali/Desktop/containers
+CURDIR := /Users/macbookpro/Desktop/ft_containers
 # makefile
 SHELL = /bin/sh
 # environment
@@ -36,13 +40,13 @@ MAKEFILE_LIST :=  Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n00006k40001mj/T/vscode-ipc-66d18d09-7e33-4c67-9175-7b449d590f36.sock
+__CFBundleIdentifier = com.microsoft.VSCode
 # environment
-VSCODE_CWD = /
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/6x/x1v650s53291y6d0ndh6068r0000gn/T/vscode-ipc-4bfeb151-60d1-42ec-a73b-bdde177a776e.sock
 # environment
-Apple_PubSub_Socket_Render = /private/tmp/com.apple.launchd.tp9oUvkpgN/Render
+VSCODE_CWD = /Users/macbookpro/Desktop/ft_containers
 # environment
-PATH = /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki
+PATH = /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
 # environment
 LSCOLORS = Gxfxcxdxbxegedabagacad
 # environment
@@ -52,75 +56,95 @@ ELECTRON_RUN_AS_NODE = 1
 # default
 .FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.uvrQbHRJKM/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.HD5B1lZ2rA/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
-PWD = /Users/mamali/Desktop/containers
+PWD = /Users/macbookpro/Desktop/ft_containers
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = undefined
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
-HOME = /Users/mamali
+HOME = /Users/macbookpro
 # default
-MAKEFILEPATH := /Applications/Xcode.app/Contents/Developer/Makefiles
+MAKEFILEPATH = $(shell /usr/bin/xcode-select -print-path 2>/dev/null || echo /Developer)/Makefiles
 # environment
-VSCODE_CODE_CACHE_PATH = /Users/mamali/Library/Application Support/Code/CachedData/4af164ea3a06f701fe3e89a2bcbb421d2026b68f
+VSCODE_CLI = 1
 # environment
-LOGNAME = mamali
+VSCODE_CODE_CACHE_PATH = /Users/macbookpro/Library/Application Support/Code/CachedData/30d9c6cd9483b2cc586687151bcbcd635f373630
+# environment
+LOGNAME = macbookpro
 # environment
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # environment
-ZSH = /Users/mamali/.oh-my-zsh
+ZSH = /Users/macbookpro/.oh-my-zsh
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
 # environment
 XPC_FLAGS = 0x0
+# environment
+COLORTERM = truecolor
 # default
 MAKE = $(MAKE_COMMAND)
-# default
-MAKECMDGOALS := all
 # environment
-SHLVL = 1
+LC_TERMINAL = iTerm2
+# environment
+SHLVL = 3
 # default
 MAKE_VERSION := 3.81
 # environment
-USER = mamali
+USER = macbookpro
 # makefile
 .DEFAULT_GOAL := 
+# default
+MAKECMDGOALS := all
+# environment
+TERM_SESSION_ID = w0t0p0:63A9AD68-1A21-485B-AA69-DF294B6A3944
 # environment
 LESS = -R
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
 # default
-MAKE_COMMAND := /Applications/Xcode.app/Contents/Developer/usr/bin/make
+MAKE_COMMAND := /Library/Developer/CommandLineTools/usr/bin/make
+# environment
+TERM_PROGRAM = iTerm.app
 # default
 .VARIABLES := 
 # environment
-TMPDIR = /var/folders/zz/zyxvpxvq6csfxvn_n00006k40001mj/T/
+TMPDIR = /var/folders/6x/x1v650s53291y6d0ndh6068r0000gn/T/
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /Users/mamali/Library/Application Support/Code/1.68.0-main.sock
+VSCODE_IPC_HOOK = /Users/macbookpro/Library/Application Support/Code/1.68.1-main.sock
 # makefile
 MAKEFLAGS = Rrqp
+# environment
+PROMPT = %{$fg[magenta]%}%n@%{$fg[magenta]%}%m%{$reset_color%} %{$fg[blue]%}%~%{$reset_color%}$ 
 # environment
 MFLAGS = -Rrqp
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
-XPC_SERVICE_NAME = com.apple.xpc.launchd.oneshot.0x10000003.Electron
+TERM_PROGRAM_VERSION = 3.4.9
+# environment
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.9496073.9496079.12870667-62DB-4FB0-B61C-2E261BF81924
+# environment
+LC_TERMINAL_VERSION = 3.4.9
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # automatic
 +F = $(notdir $+)
 # environment
-__CF_USER_TEXT_ENCODING = 0x691:0x0:0x0
+ITERM_SESSION_ID = w0t0p0:63A9AD68-1A21-485B-AA69-DF294B6A3944
+# environment
+COLORFGBG = 15;0
+# environment
+__CF_USER_TEXT_ENCODING = 0x1F5:0x0:0x0
 # environment
 COMMAND_MODE = unix2003
 # default
@@ -128,11 +152,11 @@ MAKEFILES :=
 # automatic
 <F = $(notdir $<)
 # environment
+ITERM_PROFILE = Default
+# environment
 PAGER = less
 # environment
 LC_ALL = C
-# environment
-SECURITYSESSIONID = 186a8
 # automatic
 ^F = $(notdir $^)
 # default
@@ -144,9 +168,11 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 3102
+TERM = xterm-256color
+# environment
+VSCODE_PID = 38320
 # variable set hash-table stats:
-# Load=67/1024=7%, Rehash=0, Collisions=1/90=1%
+# Load=80/1024=8%, Rehash=0, Collisions=4/103=4%
 
 # Pattern-specific Variable Values
 
@@ -154,7 +180,7 @@ VSCODE_PID = 3102
 
 # Directories
 
-# . (device 16777227, inode 592627): 10 files, no impossibilities.
+# . (device 16777220, inode 9508414): 10 files, no impossibilities.
 
 # 10 files, no impossibilities in 1 directories.
 
@@ -182,7 +208,7 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-12 22:16:22
+#  Last modified 2022-06-16 05:42:40
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -207,7 +233,7 @@ Makefile:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Wed Jun 15 03:24:58 2022
+# Finished Make data base on Thu Jun 16 05:42:52 2022
 
  
 make: *** No rule to make target `all'.  Stop.

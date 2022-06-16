@@ -328,6 +328,8 @@ int main()
             / \ \
             10 25 50
     */
+    print2DUtil(root, 1);
+
     root = deleteNode(root,  2);
 
 

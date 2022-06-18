@@ -39,11 +39,11 @@ template < class Key,                                     // map::key_type
             protected:
                 key_compare _compare;
             public:
+                value_compare(key_compare c) : _compare(c) {}
                 bool operator() (const value_type& x, const value_type& y) const
                 {
                     return _compare(x.first, y.first);
                 }
-                value_compare(key_compare c) : _compare(c) {}
             } value_compare;
         private:
             tree _tree;
@@ -62,19 +62,21 @@ template < class Key,                                     // map::key_type
             map (InputIterator first, InputIterator last,
                 const key_compare& comp = key_compare(),
                 const allocator_type& alloc = allocator_type())
+            {
+                while (first != last)
                 {
-
+                    insert(*first);
+                    ++first;
                 }
+            }
 
             map(const map &x)
             {
                 *this = x;
             }
 
-            // ! destructor
             ~map() {}
 
-            // ! assignation operator
             map &operator=(const map &other)
             {
                 if (this != &other)
@@ -217,6 +219,31 @@ template < class Key,                                     // map::key_type
                 return (end());
             }
 
+            size_type count(const key_type &k) const
+            {
+                node_type *tmp = _tree.search(_tree._root, k);
+                if (!tmp)
+                    return (0);
+                return (1);
+            }
+            /*              Observers            */
+
+            key_compare key_comp() const
+            {
+                return this->_compare;
+            }
+
+            value_compare value_comp() const
+            {
+                return value_compare(_compare);
+            }
+            /*              Allocator            */
+
+            allocator_type get_allocator() const
+            {
+                return(this->_allocator);
+            }
+
             /*              Avl Treee            */
 
             // void insert(value_type value)
@@ -245,6 +272,49 @@ template < class Key,                                     // map::key_type
             //     return (test);
             // }
     };
+    template <class Key, class T, class Compare, class Alloc>
+    bool operator==(const ft::map<Key, T, Compare, Alloc> &lhs,
+                    const ft::map<Key, T, Compare, Alloc> &rhs)
+    {
+        return lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin());
+    }
+    template <class Key, class T, class Compare, class Alloc>
+    bool operator!=(const ft::map<Key, T, Compare, Alloc> &lhs,
+                    const ft::map<Key, T, Compare, Alloc> &rhs)
+    {
+        return !(lhs == rhs);
+    }
+    template <class Key, class T, class Compare, class Alloc>
+    bool operator<(const ft::map<Key, T, Compare, Alloc> &lhs,
+                    const ft::map<Key, T, Compare, Alloc> &rhs)
+    {
+        return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+    }
+    template <class Key, class T, class Compare, class Alloc>
+    bool operator<=(const ft::map<Key, T, Compare, Alloc> &lhs,
+                    const ft::map<Key, T, Compare, Alloc> &rhs)
+    {
+        return !(rhs < lhs);
+    }
+    template <class Key, class T, class Compare, class Alloc>
+    bool operator>(const ft::map<Key, T, Compare, Alloc> &lhs,
+                    const ft::map<Key, T, Compare, Alloc> &rhs)
+    {
+        return rhs < lhs;
+    }
+    template <class Key, class T, class Compare, class Alloc>
+    bool operator>=(const ft::map<Key, T, Compare, Alloc> &lhs,
+                    const ft::map<Key, T, Compare, Alloc> &rhs)
+    {
+        return !(lhs < rhs);
+    }
+
+    template <class Key, class T, class Compare, class Alloc>
+    void swap(ft::map<Key, T, Compare, Alloc> &lhs, ft::map<Key, T, Compare, Alloc> &rhs)
+    {
+        lhs.swap(rhs);
+    }
+
 }
 
 

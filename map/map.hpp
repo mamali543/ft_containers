@@ -3,6 +3,10 @@
 
 #include <iostream>
 # include "avl_tree.hpp"
+#include "bidirectional_iterator.hpp"
+#include "../utils/make_pair.hpp"
+#include "../utils/pair.hpp"
+#include "../vector/vector.hpp"
 
 namespace ft{
 
@@ -25,8 +29,8 @@ template < class Key,                                     // map::key_type
             typedef typename allocator_type::size_type size_type;
             typedef typename ft::avl_tree<Key, mapped_type, Compare, Alloc> tree;
             typedef ft::Node<value_type> node_type;
-            // typedef ft::bidirectional_iterator<node_type, value_type> iterator;
-            // typedef ft::const_bidirectional_iterator<node_type, value_type> const_iterator;
+            typedef ft::bidirectional_iterator<node_type, value_type> iterator;
+            typedef ft::const_bidirectional_iterator<node_type, value_type> const_iterator;
             // typedef ft::reverse_iterator<iterator> reverse_iterator;
             // typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
             typedef ptrdiff_t difference_type;
@@ -35,15 +39,11 @@ template < class Key,                                     // map::key_type
             protected:
                 key_compare _compare;
             public:
-            // typedef bool result_type;
-            // typedef value_type first_argument_type;
-            // typedef value_type second_argument_type;
-           
-            bool operator() (const value_type& x, const value_type& y) const
-            {
-                return _compare(x.first, y.first);
-            }
-            value_compare(key_compare c) : _compare(c) {}
+                bool operator() (const value_type& x, const value_type& y) const
+                {
+                    return _compare(x.first, y.first);
+                }
+                value_compare(key_compare c) : _compare(c) {}
             } value_compare;
         private:
             tree _tree;
@@ -51,42 +51,201 @@ template < class Key,                                     // map::key_type
             key_compare _compare;
             allocator_type _allocator;
         public:
-             map(): _tree() , _compare(), _allocator()
+            /* empty constructor */
+            explicit map (const key_compare& comp = key_compare(),
+                        const allocator_type& alloc = allocator_type()):_tree(), _compare(comp), _allocator(alloc)
             {
-
+                
             }
 
-            void insert(value_type value)
+            template <class InputIterator>
+            map (InputIterator first, InputIterator last,
+                const key_compare& comp = key_compare(),
+                const allocator_type& alloc = allocator_type())
+                {
+
+                }
+
+            map(const map &x)
             {
-                _tree.insert(value);
+                *this = x;
             }
 
-            void preOrder()
+            // ! destructor
+            ~map() {}
+
+            // ! assignation operator
+            map &operator=(const map &other)
             {
-                _tree.preOrder(_tree._root);
+                if (this != &other)
+                {
+                    _tree = other._tree;
+                    _compare = other._compare;
+                    _allocator = other._allocator;
+                }
+                return *this;
+            }
+            /*              capacity            */
+            bool empty() const
+            {
+                return (_tree.empty());
             }
 
-            void print()
+            size_type size() const
             {
-                _tree.print2DUtil();
+                return(_tree.size());
             }
 
-            void remove(key_type value)
+            size_type max_size() const
             {
-                _tree.remove(value);
+                return (this->_allocator.max_zize());
             }
-        
-            int size()
+            /*              Element access            */
+
+            mapped_type& operator[] (const key_type& k)
             {
-                return (_tree.size());
+                ft::pair<key_type, mapped_type> p = ft::make_pair(k, mapped_type());
+                _tree.insert(p);
+                // std::cout << "first " << p.first << " second " << p.second << std::endl;
+                node_type *node = _tree.search(_tree._root, p.first);
+                return (node->_data->second);
             }
 
-            node_type* search(key_type x)
+            /*             iterators            */
+
+            iterator begin()
             {
-                node_type* test =  _tree.search(_tree._root, x);
-                return (test);
+                node_type *tmp = min_node(_tree._root);
+                return (iterator(tmp, const_cast<node_type **>(&_tree._root)));
             }
+
+            iterator end()
+            {
+                return iterator(NULL, const_cast<node_type **>(&_tree._root));
+            }
+            /*             modifiers            */
+
+            void swap(map &other)
+            {
+                // std::swap(_tree, other._tree); // ! time out
+                _tree.swap(other._tree);
+                std::swap(this->_compare, other._compare);
+                std::swap(this->_allocator, other._allocator);
+            }
+
+            void erase (iterator position)
+            {
+                value_type  a = *(position);
+                _tree.remove(a.first);
+            }
+
+            size_type erase (const key_type& k)
+            {
+                return(_tree.remove(k));
+            }
+
+            void erase (iterator first, iterator last)
+            {
+                ft::vector<key_type> vect;
+                while (first != last)
+                {
+                    vect.push_back(first->first);
+                    first++;
+                }
+                typename ft::vector<key_type>::iterator it = vect.begin();
+                while (it != vect.end())
+                {
+                    erase(*it);
+                    it++;
+                }
+                // for (size_type i = 0; i < vect.size(); i++)
+                // {
+                //     erase(vect[i]);
+                // }
+            }
+
+            pair<iterator,bool> insert (const value_type& val)
+            {
+                ft::pair<key_type, mapped_type> a = ft::make_pair(val.first, val.second);
+                node_type   *node = _tree.search(_tree._root, val.first);
+                if (node)
+                {
+                    return (pair<iterator, bool>(iterator(node, const_cast<node_type **>(&_tree._root)), false));
+                }
+                else
+                {
+                    _tree.insert(a);
+                    node = _tree.search(_tree._root, val.first);
+                    return(pair<iterator, bool>(iterator(node, const_cast<node_type **>(&_tree._root)), true));
+                }
+            }
+
+            iterator insert (iterator position, const value_type& val)
+            {
+                (void)position;
+                node_type *node = _tree.search(_tree._root, val.first);
+                _tree.insert(val);
+                return (iterator(node, &_tree._root));
+            }
+
+            template <class InputIterator>
+            void insert (InputIterator first, InputIterator last)
+            {
+                for(; first != last; first++)
+                    _tree.insert(*first);
+            }
+
+            void clear()
+            {
+                erase(begin(), end());
+            }
+            /*              Operations            */
+
+            iterator find (const key_type& k)
+            {
+                node_type *tmp = _tree.search(_tree._root, k);
+                if (tmp)
+                    return iterator(tmp, &_tree._root);
+                return (end());
+            }
+
+            const_iterator find (const key_type& k) const
+            {
+                node_type *tmp = _tree.search(_tree._root, k);
+                if (tmp != NULL)
+                    return const_iterator(tmp, const_cast<node_type **>(&_tree._root));
+                return (end());
+            }
+
+            /*              Avl Treee            */
+
+            // void insert(value_type value)
+            // {
+            //     _tree.insert(value);
+            // }
+
+            // void preOrder()
+            // {
+            //     _tree.preOrder(_tree._root);
+            // }
+
+            // void print()
+            // {
+            //     _tree.print2DUtil();
+            // }
+
+            // void remove(key_type value)
+            // {
+            //     _tree.remove(value);
+            // }
+
+            // node_type* search(key_type x)
+            // {
+            //     node_type* test =  _tree.search(_tree._root, x);
+            //     return (test);
+            // }
     };
 }
+
 
 #endif

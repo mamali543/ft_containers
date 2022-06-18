@@ -7,6 +7,8 @@
 
 #include <iostream>
 #include "../utils/pair.hpp"
+#include "../utils/make_pair.hpp"
+#include "bidirectional_iterator.hpp"
 
 namespace ft{
     template <typename Pair>
@@ -21,7 +23,60 @@ namespace ft{
             int _balance_factor;
             Node() {}
             ~Node() {}
-        };
+    };
+        template <class U>
+        Node<U> *increment(Node<U> *node, Node<U> *root)
+        {
+            if (!node)
+                node = min_node(root);
+            else
+            {
+                if (node->_right)
+                {
+                    node = node->_right;
+                    while (node->_left)
+                        node = node->_left;
+                }
+                else
+                {
+                    Node<U> *tmp = node->_parent;
+                    while (tmp && node == tmp->_right)
+                    {
+                        node = tmp;
+                        tmp = node->_parent;
+                    }
+                    node = tmp;
+                }
+            }
+            return(node);
+        }
+
+        template <class U>
+        Node<U> *decrement(Node<U> *node, Node<U> *root)
+        {
+            if (!node)
+                node = max_node(root);
+            else
+            {
+                if (node->_left)
+                {
+                    node = node->_left;
+                    while (node->_right)
+                        node = node->_left;
+                }
+                else
+                {
+                    Node<U> *tmp = node->_parent;
+                    while (tmp && node == tmp->_left)
+                    {
+                        node = tmp;
+                        tmp = node->_parent;
+                    }
+                    node = tmp;
+                }
+            }
+            return(node);
+        }
 
     template < class Key,                                     // map::key_type
         class T,                                       // map::mapped_type
@@ -39,7 +94,7 @@ namespace ft{
         typedef ptrdiff_t difference_type;
         typedef size_t size_type;
         node_type *_root;
-        // typedef bidirectional_iterator<node_type, value_type> iterator;
+        typedef bidirectional_iterator<node_type, value_type> iterator;
     private:
         size_type _size;
         Compare _compare;
@@ -146,11 +201,11 @@ namespace ft{
             else
             {
                 if (!_compare(node->_data->first, key))
-                    return(search(node->_right, key));
-                else
                     return(search(node->_left, key));
+                else
+                    return(search(node->_right, key));
             }
-            return (NULL);
+            // return (NULL);
         }
         /*                 Insert                   */
         node_type   *newNode(value_type x)
@@ -434,79 +489,7 @@ namespace ft{
             _size--;
             return true;
         }
-        template <class U>
-        Node<U> *min_node(Node<U> *node)
-        {
-            if (!node)
-                return(node);
-            while (node->_left)
-                node = node->_left;
-            return (node);
-        }
-
-        template <class U>
-        Node<U> *max_node(Node<U> *node)
-        {
-            if (!node)
-                return (node);
-            while (node->_right)
-                node = node->_right;
-            return (node);
-        }
-
-        template <class U>
-        Node<U> *incremen(Node<U> *node, Node<U> *root)
-        {
-            if (!node)
-                node = min_node(root);
-            else
-            {
-                if (node->_right)
-                {
-                    node = node->_right;
-                    while (node->_left)
-                        node = node->_left;
-                }
-                else
-                {
-                    Node<U> *tmp = node->_parent;
-                    while (tmp && node == tmp->_right)
-                    {
-                        node = tmp;
-                        tmp = node->_parent;
-                    }
-                    node = tmp;
-                }
-            }
-            return(node);
-        }
-
-        template <class U>
-        Node<U> *decrement(Node<U> *node, Node<U> *root)
-        {
-            if (!node)
-                node = max_node(root);
-            else
-            {
-                if (node->_left)
-                {
-                    node = node->_left;
-                    while (node->_right)
-                        node = node->_left;
-                }
-                else
-                {
-                    Node<U> *tmp = node->_parent;
-                    while (tmp && node == tmp->_left)
-                    {
-                        node = tmp;
-                        tmp = node->_parent;
-                    }
-                    node = tmp;
-                }
-            }
-            return(node);
-        }
+       
         /*                 help methods                   */
         node_type   *max(node_type *node)const
         {
@@ -529,6 +512,28 @@ namespace ft{
             std::swap(_compare, other._compare);
         }
     };
+
+    template <class U>
+    Node<U> *min_node(Node<U> *node)
+    {
+        if (!node)
+            return(node);
+        while (node->_left)
+            node = node->_left;
+        return (node);
+    }
+
+    template <class U>
+    Node<U> *max_node(Node<U> *node)
+    {
+        if (!node)
+            return (node);
+        while (node->_right)
+            node = node->_right;
+        return (node);
+    }
+
+    
 }
 
 #endif

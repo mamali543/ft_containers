@@ -64,6 +64,10 @@
         "typeinfo": "cpp",
         "utility": "cpp",
         "*.ipp": "cpp",
-        "deque": "cpp"
+        "deque": "cpp",
+        "__bits": "cpp",
+        "__tree": "cpp",
+        "clocale": "cpp",
+        "map": "cpp"
     }
 }

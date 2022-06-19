@@ -74,7 +74,8 @@ template < class Key,                                     // map::key_type
                 *this = x;
             }
 
-            ~map() {}
+            ~map() {
+            }
 
             map &operator=(const map &other)
             {

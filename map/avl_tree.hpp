@@ -33,9 +33,8 @@ namespace ft{
             {
                 if (node->_right)
                 {
-                    node = node->_right;
-                    while (node->_left)
-                        node = node->_left;
+                    node = min_node(node->_right);
+
                 }
                 else
                 {
@@ -60,9 +59,7 @@ namespace ft{
             {
                 if (node->_left)
                 {
-                    node = node->_left;
-                    while (node->_right)
-                        node = node->_left;
+                    node =  max_node(node->_left);
                 }
                 else
                 {
@@ -135,6 +132,11 @@ namespace ft{
             node_type *tmp = other._root;
             copy(tmp);
             return *this;
+        }
+        ~avl_tree()
+        {
+                clear();
+
         }
 
         void clear()

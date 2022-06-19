@@ -180,34 +180,37 @@
 #include <vector>   // std::vector
 #include <deque>    // std::deque
 
-
-int main ()
+int main()
 {
-{  std::vector<int> myvector (5);  // 5 default-constructed ints
+  {
+    std::vector<int> myvector(5); // 5 default-constructed ints
 
-  int i=0;
+    int i = 0;
 
-  std::vector<int>::reverse_iterator rit = myvector.rbegin();
-  for (; rit!= myvector.rend(); ++rit)
-    *rit = ++i;
+    std::vector<int>::reverse_iterator rit = myvector.rbegin();
+    for (; rit != myvector.rend(); ++rit)
+      *rit = ++i;
 
-  std::cout << "myvector contains:";
-  for (std::vector<int>::iterator it = myvector.begin(); it != myvector.end(); ++it)
-    std::cout << ' ' << *it;
-  std::cout << '\n';}
-std::cout << "hello\n";
-{    ft::vector<int> myvector (5);  // 5 default-constructed ints
+    std::cout << "myvector contains:";
+    for (std::vector<int>::iterator it = myvector.begin(); it != myvector.end(); ++it)
+      std::cout << ' ' << *it;
+    std::cout << '\n';
+  }
+  std::cout << "hello\n";
+  {
+    ft::vector<int> myvector(5); // 5 default-constructed ints
 
-  int i=0;
+    int i = 0;
 
-  ft::vector<int>::reverse_iterator rit = myvector.rbegin();
-  for (; rit!= myvector.rend(); ++rit)
-    *rit = ++i;
+    ft::vector<int>::reverse_iterator rit = myvector.rbegin();
+    for (; rit != myvector.rend(); ++rit)
+      *rit = ++i;
 
-  std::cout << "myvector contains:";
-  for (ft::vector<int>::iterator it = myvector.begin(); it != myvector.end(); ++it)
-    std::cout << ' ' << *it;
-  std::cout << '\n';}
+    std::cout << "myvector contains:";
+    for (ft::vector<int>::iterator it = myvector.begin(); it != myvector.end(); ++it)
+      std::cout << ' ' << *it;
+    std::cout << '\n';
+  }
 
   return 0;
 }

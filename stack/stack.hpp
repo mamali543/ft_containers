@@ -1,5 +1,5 @@
-#ifndef STACK_HPP
-#define STACK_HPP
+#ifndef stack_HPP
+#define stack_HPP
 
 #include <iostream>
 #include "../vector/vector.hpp"
@@ -20,7 +20,6 @@ namespace ft
 
     public:
         explicit stack(const container_type &container = container_type()) : _container(container) {}
-
         void push(const T &value) { _container.push_back(value); }
 
         void pop() { _container.pop_back(); }

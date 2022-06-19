@@ -74,6 +74,8 @@
         "set": "cpp",
         "csignal": "cpp",
         "fstream": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "numeric": "cpp",
+        "random": "cpp"
     }
 }

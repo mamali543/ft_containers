@@ -3,26 +3,24 @@
 
 #include "../vector/iterator_traits.hpp"
 
-
 namespace ft
 {
     template <typename Node, typename Pair>
     class bidirectional_iterator
     {
     public:
-        typedef Node*   node_pointer;
-        typedef Pair*   pair_pointer; // more readable
-        typedef Pair*   pointer;      // for iterator traits
-        typedef Pair&   reference;    // for iterator traits
-        typedef Pair    value_type;
+        typedef Node *node_pointer;
+        typedef Pair *pair_pointer; // more readable
+        typedef Pair *pointer;      // for iterator traits
+        typedef Pair &reference;    // for iterator traits
+        typedef Pair value_type;
         typedef Pair &pair_reference;
         typedef std::bidirectional_iterator_tag iterator_category;
         typedef std::ptrdiff_t difference_type;
-    private:
         node_pointer _node;
         node_pointer *_root;
-    public:
 
+    public:
         bidirectional_iterator() : _node(NULL), _root(NULL) {}
 
         bidirectional_iterator(node_pointer node, node_pointer *root) : _node(node), _root(root) {}
@@ -59,9 +57,9 @@ namespace ft
 
         bidirectional_iterator operator++(int)
         {
-      	    bidirectional_iterator tmp = *this;
-			_node = increment(_node, *_root);
-			return tmp;
+            bidirectional_iterator tmp = *this;
+            _node = increment(_node, *_root);
+            return tmp;
         }
 
         bidirectional_iterator &operator--()
@@ -108,18 +106,14 @@ namespace ft
         typedef Pair &pair_reference;
         typedef std::ptrdiff_t difference_type;
         typedef ft::bidirectional_iterator<Node, Pair> bidirectional_iterator;
-
-    private:
         node_pointer _node;
         node_pointer *_root;
 
-    public:
         const_bidirectional_iterator() : _node(NULL), _root(NULL) {}
 
         const_bidirectional_iterator(node_pointer node, node_pointer *root) : _node(node), _root(root) {}
 
         const_bidirectional_iterator(Node node, node_pointer root) : _node(node), _root(root) {}
-
 
         const_bidirectional_iterator(const bidirectional_iterator &other)
         {

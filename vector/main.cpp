@@ -180,42 +180,74 @@
 #include <vector>   // std::vector
 #include <deque>    // std::deque
 
+
 int main ()
 {
-{  std::vector<int> mydeque (3,100);          // deque with 3 elements
-  std::vector<int> myvector (2,200);        // vector with 2 elements
+{  std::vector<int> myvector (5);  // 5 default-constructed ints
 
-  std::stack<int> first;                    // empty stack
-  // std::stack<int> second (mydeque);         // stack initialized to copy of deque
+  int i=0;
 
-  std::stack<int,std::vector<int> > third;  // empty stack using vector
-  std::stack<int,std::vector<int> > fourth (myvector);
+  std::vector<int>::reverse_iterator rit = myvector.rbegin();
+  for (; rit!= myvector.rend(); ++rit)
+    *rit = ++i;
 
-  if (fourth > third)
-    std::cout << "forth greater than first: " << '\n';
-  else if (fourth < third)
-    std::cout << "first greater than forth:" << '\n';
- else
-    std::cout << "forth and first are equal"<< '\n';}
+  std::cout << "myvector contains:";
+  for (std::vector<int>::iterator it = myvector.begin(); it != myvector.end(); ++it)
+    std::cout << ' ' << *it;
+  std::cout << '\n';}
+std::cout << "hello\n";
+{    ft::vector<int> myvector (5);  // 5 default-constructed ints
 
-  { std::vector<int> mydeque (3,100);          // deque with 3 elements
-  ft::vector<int> myvector (2,200);        // vector with 2 elements
+  int i=0;
 
-  ft::stack<int> first;                    // empty stack
-//   ft::stack<int> second (mydeque);         // stack initialized to copy of deque
+  ft::vector<int>::reverse_iterator rit = myvector.rbegin();
+  for (; rit!= myvector.rend(); ++rit)
+    *rit = ++i;
 
-  ft::stack<int,ft::vector<int> > third;  // empty stack using vector
-  ft::stack<int,ft::vector<int> > fourth (myvector);
-  if (fourth > third)
-    std::cout << "forth greater than first: " << '\n';
-  else if (fourth < third)
-    std::cout << "first greater than forth:" << '\n';
- else
-    std::cout << "forth and first are equal"<< '\n';
-  }
+  std::cout << "myvector contains:";
+  for (ft::vector<int>::iterator it = myvector.begin(); it != myvector.end(); ++it)
+    std::cout << ' ' << *it;
+  std::cout << '\n';}
 
   return 0;
 }
+
+// int main ()
+// {
+// {  std::vector<int> mydeque (3,100);          // deque with 3 elements
+//   std::vector<int> myvector (2,200);        // vector with 2 elements
+
+//   std::stack<int> first;                    // empty stack
+//   // std::stack<int> second (mydeque);         // stack initialized to copy of deque
+
+//   std::stack<int,std::vector<int> > third;  // empty stack using vector
+//   std::stack<int,std::vector<int> > fourth (myvector);
+
+//   if (fourth > third)
+//     std::cout << "forth greater than first: " << '\n';
+//   else if (fourth < third)
+//     std::cout << "first greater than forth:" << '\n';
+//  else
+//     std::cout << "forth and first are equal"<< '\n';}
+
+//   { std::vector<int> mydeque (3,100);          // deque with 3 elements
+//   ft::vector<int> myvector (2,200);        // vector with 2 elements
+
+//   ft::stack<int> first;                    // empty stack
+// //   ft::stack<int> second (mydeque);         // stack initialized to copy of deque
+
+//   ft::stack<int,ft::vector<int> > third;  // empty stack using vector
+//   ft::stack<int,ft::vector<int> > fourth (myvector);
+//   if (fourth > third)
+//     std::cout << "forth greater than first: " << '\n';
+//   else if (fourth < third)
+//     std::cout << "first greater than forth:" << '\n';
+//  else
+//     std::cout << "forth and first are equal"<< '\n';
+//   }
+
+//   return 0;
+// }
 
 // int main()
 // {

@@ -68,6 +68,12 @@
         "__bits": "cpp",
         "__tree": "cpp",
         "clocale": "cpp",
-        "map": "cpp"
+        "map": "cpp",
+        "stack": "cpp",
+        "filesystem": "cpp",
+        "set": "cpp",
+        "csignal": "cpp",
+        "fstream": "cpp",
+        "iomanip": "cpp"
     }
 }

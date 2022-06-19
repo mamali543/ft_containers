@@ -105,7 +105,7 @@ namespace ft{
         {
             if (node == NULL)
                 return (false);   
-            if(equal(node->_data->first, k))
+            if(equall(node->_data->first, k))
                 return (true);
             if (!_compare(k , node->_data->first ))
                 return (__exists(node->_right, k));
@@ -139,7 +139,11 @@ namespace ft{
 
         void clear()
         {
-            free_node(_root);
+            if (_root)
+            {
+                free_node(_root);
+                _root = NULL;
+            }
             _size = 0;
         }
 
@@ -147,8 +151,8 @@ namespace ft{
         {
             if (node)
             {
-                node->_left = NULL;
-                node->_right = NULL;
+                free_node(node->_right);
+                free_node(node->_left);
                 _pair_allocator.destroy(node->_data);
                 _pair_allocator.deallocate(node->_data, 1);
                 _node_allocator.deallocate(node, 1);
@@ -187,16 +191,16 @@ namespace ft{
             return _root->_height;
         }
 
-        bool equal(const key_type &keya, const key_type &keyb) const
+        bool equall(const key_type &keya, const key_type &keyb) const
         {
             return(_compare(keya, keyb) == false && _compare(keyb, keya) == false);
         }
         /*                 Search                   */
-        node_type* search(node_type *node, key_type key)
+        node_type* search(node_type *node, key_type key) const
         {
             if (node == NULL)
                 return (node);
-            if (equal(key, node->_data->first))
+            if (equall(key, node->_data->first))
                 return (node);
             else
             {
@@ -419,7 +423,7 @@ namespace ft{
 
         }
 
-        int     size()
+        int     size()const
         {
             return (this->_size);
         }
@@ -510,6 +514,11 @@ namespace ft{
             std::swap(_size, other._size);
             std::swap(_root, other._root);
             std::swap(_compare, other._compare);
+        }
+
+        bool    empty() const
+        {
+            return (_size == 0);
         }
     };
 

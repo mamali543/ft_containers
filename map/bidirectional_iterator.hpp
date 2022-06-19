@@ -1,6 +1,7 @@
 #ifndef BIDIRECTIONAL_ITERATOR_HPP
 #define BIDIRECTIONAL_ITERATOR_HPP
 
+#include "../vector/iterator_traits.hpp"
 
 
 namespace ft
@@ -15,10 +16,12 @@ namespace ft
         typedef Pair&   reference;    // for iterator traits
         typedef Pair    value_type;
         typedef Pair &pair_reference;
-        node_pointer _node;
         typedef std::bidirectional_iterator_tag iterator_category;
-        node_pointer *_root;
         typedef std::ptrdiff_t difference_type;
+    private:
+        node_pointer _node;
+        node_pointer *_root;
+    public:
 
         bidirectional_iterator() : _node(NULL), _root(NULL) {}
 
@@ -86,10 +89,10 @@ namespace ft
             return (_node != other._node);
         }
 
-        // operator ft::bidirectional_iterator<Node, const Pair>()
-        // {
-        //     return ft::bidirectional_iterator<Node, const Pair>(_node, _root);
-        // }
+        operator ft::bidirectional_iterator<Node, const Pair>()
+        {
+            return ft::bidirectional_iterator<Node, const Pair>(_node, _root);
+        }
     };
 
     template <typename Node, typename Pair>
@@ -115,19 +118,13 @@ namespace ft
 
         const_bidirectional_iterator(node_pointer node, node_pointer *root) : _node(node), _root(root) {}
 
-        // const_bidirectional_iterator(Node node, node_pointer root) : _node(node), _root(root) {}
-
-        // tmp test
-        // const_bidirectional_iterator(node_pointer node, node_pointer root) : _node(node), _root(root) {}
-        
-        // 
+        const_bidirectional_iterator(Node node, node_pointer root) : _node(node), _root(root) {}
 
 
         const_bidirectional_iterator(const bidirectional_iterator &other)
         {
             _node = other._node;
             _root = other._root;
-            // ? segv when doing *this = other
         }
 
         const_bidirectional_iterator(const const_bidirectional_iterator &other)
@@ -193,10 +190,10 @@ namespace ft
             return (_node != other._node);
         }
 
-        // operator ft::bidirectional_iterator<Node, const Pair>()
-        // {
-        //     return ft::bidirectional_iterator<Node, const Pair>(_node, _root);
-        // }
+        operator ft::bidirectional_iterator<Node, const Pair>()
+        {
+            return ft::bidirectional_iterator<Node, const Pair>(_node, _root);
+        }
     };
 }
 

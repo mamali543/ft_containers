@@ -4,6 +4,7 @@
 #include <iostream>
 # include "avl_tree.hpp"
 #include "bidirectional_iterator.hpp"
+#include "../vector/revers_iterator.hpp"
 #include "../utils/make_pair.hpp"
 #include "../utils/pair.hpp"
 #include "../vector/vector.hpp"
@@ -31,8 +32,8 @@ template < class Key,                                     // map::key_type
             typedef ft::Node<value_type> node_type;
             typedef ft::bidirectional_iterator<node_type, value_type> iterator;
             typedef ft::const_bidirectional_iterator<node_type, value_type> const_iterator;
-            // typedef ft::reverse_iterator<iterator> reverse_iterator;
-            // typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+            typedef ft::reverse_iterator<iterator> reverse_iterator;
+            typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
             typedef ptrdiff_t difference_type;
             typedef class value_compare : public std::binary_function<value_type, value_type, bool>
             {
@@ -47,11 +48,9 @@ template < class Key,                                     // map::key_type
             } value_compare;
         private:
             tree _tree;
-            // size_type _size;
             key_compare _compare;
             allocator_type _allocator;
         public:
-            /* empty constructor */
             explicit map (const key_compare& comp = key_compare(),
                         const allocator_type& alloc = allocator_type()):_tree(), _compare(comp), _allocator(alloc)
             {
@@ -100,7 +99,7 @@ template < class Key,                                     // map::key_type
 
             size_type max_size() const
             {
-                return (this->_allocator.max_zize());
+                return (this->_allocator.max_size());
             }
             /*              Element access            */
 
@@ -125,6 +124,40 @@ template < class Key,                                     // map::key_type
             {
                 return iterator(NULL, const_cast<node_type **>(&_tree._root));
             }
+
+            const_iterator begin() const
+            {
+                node_type *tmp = min_node(_tree._root);
+                return (const_iterator(tmp, const_cast<node_type **>(&_tree._root)));
+            }
+
+            const_iterator end() const
+            {
+                return const_iterator(NULL, const_cast<node_type **>(&_tree._root));
+            }
+
+            reverse_iterator rbegin()
+            {
+                return (reverse_iterator(end()));
+            }
+
+            const_reverse_iterator rbegin() const
+            {
+                const_reverse_iterator tmp(end());
+                return (tmp);
+            }
+
+            reverse_iterator rend()
+            {
+                return (reverse_iterator(begin()));
+            }
+
+            const_reverse_iterator rend() const
+            {
+                const_reverse_iterator tmp(begin());
+                return (tmp);
+            }
+
             /*             modifiers            */
 
             void swap(map &other)
@@ -276,7 +309,7 @@ template < class Key,                                     // map::key_type
     bool operator==(const ft::map<Key, T, Compare, Alloc> &lhs,
                     const ft::map<Key, T, Compare, Alloc> &rhs)
     {
-        return lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin());
+        return lhs.size() == rhs.size() && equal(lhs.begin(), lhs.end(), rhs.begin());
     }
     template <class Key, class T, class Compare, class Alloc>
     bool operator!=(const ft::map<Key, T, Compare, Alloc> &lhs,

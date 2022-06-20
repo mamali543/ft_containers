@@ -180,37 +180,102 @@
 #include <vector>   // std::vector
 #include <deque>    // std::deque
 
+
+#include <vector>
+#include <iostream>
+#include <iterator>
+#include <ctime>
+#include <iomanip>
+#include <unistd.h>
+#include <signal.h>
+#include <sys/time.h>
+#include "../vector/vector.hpp"
+
+#define BLUE "\e[0;34m"
+#define RED "\e[0;31m"
+#define GREEN "\e[0;32m"
+#define YELLOW "\e[1;33m"
+#define RESET "\e[0m"
+
+#define EQUAL(x) ((x) ? (std::cout << "\033[1;32mAC\033[0m\n") : (std::cout << "\033[1;31mWA\033[0m\n"))
+#define TIME_FAC 20 // the ft::vector methods can be slower up to std::vector methods * TIME_FAC (MAX 20)
+
 int main()
 {
-  {
-    std::vector<int> myvector(5); // 5 default-constructed ints
+        std::cout << "\033[1;36m<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< vector tests >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\033[0m\n\n";
+    std::cout << "\033[1;37m[-------------------- [" << std::setw(40) << std::left << " fill constructor "
+              << "] --------------------]\t\t\033[0m";
+    {
+        /*--------------- fill tow vectors with a 10 strings ------*/
+        ft::vector<std::string> my_v(10, "fill constructor test");
+        std::vector<std::string> v(10, "fill constructor test");
+        /*---------------------------------------------------------*/
+        /*--------------- declare tow strings to store the results ------*/
+        std::string res, my_res;
+        /*---------------------------------------------------------*/
+        for (std::vector<std::string>::iterator it = v.begin(); it != v.end(); ++it) // fill res from std::vector
+            res += *it;
 
-    int i = 0;
+        for (ft::vector<std::string>::iterator it = my_v.begin(); it != my_v.end(); ++it) // fill my_res from ft::vector
+            my_res += *it;
+        EQUAL(res == my_res);
+    }
+    std::cout << "\033[1;37m[-------------------- [" << std::setw(40) << std::left << " range constructor "
+              << "] --------------------]\t\t\033[0m";
+    {
+        /*--------------- fill std::vector with 10 strings and ft::vector with range of iterators ------*/
+        std::vector<std::string> v(10, "range constructor test");
+        ft::vector<std::string> my_v(10, "range constructor test");
+                    std::cout << "\nsssss\n";
 
-    std::vector<int>::reverse_iterator rit = myvector.rbegin();
-    for (; rit != myvector.rend(); ++rit)
-      *rit = ++i;
+        ft::vector<std::string> my_v1(my_v.begin(), my_v.end()  ); // this one is to check if the range works with ft::vector
+        
+        // ft::vector<std::string> my_v1; // this one is to check if the range works with ft::vector
+        /*----------------------------------------------------------------------------------------------*/
+        /*--------------- declare tow strings to store the results ------*/
+        std::string res, my_res, my_res1;
+        // /*--------------------------------------------------------*/
+        // for (std::vector<std::string>::iterator it = v.begin(); it != v.end(); ++it) // fill res from std::vector
+        //     res += *it;
 
-    std::cout << "myvector contains:";
-    for (std::vector<int>::iterator it = myvector.begin(); it != myvector.end(); ++it)
-      std::cout << ' ' << *it;
-    std::cout << '\n';
-  }
-  std::cout << "hello\n";
-  {
-    ft::vector<int> myvector(5); // 5 default-constructed ints
+        // for (ft::vector<std::string>::iterator it = my_v.begin(); it != my_v.end(); ++it) // fill my_res from ft::vector
+        //     my_res += *it;
 
-    int i = 0;
+        // for (ft::vector<std::string>::iterator it = my_v1.begin(); it != my_v1.end(); ++it) // fill my_res1 from ft::vector
+        //     my_res1 += *it;
+        EQUAL(res == my_res && my_res == my_res1);
+    }
+    // std::cout << "\033[1;37m[-------------------- [" << std::setw(40) << std::left << " copy constructor "
+    //           << "] --------------------]\t\t\033[0m";
+  // {
+  //   std::vector<int> myvector(5); // 5 default-constructed ints
 
-    ft::vector<int>::reverse_iterator rit = myvector.rbegin();
-    for (; rit != myvector.rend(); ++rit)
-      *rit = ++i;
+  //   int i = 0;
 
-    std::cout << "myvector contains:";
-    for (ft::vector<int>::iterator it = myvector.begin(); it != myvector.end(); ++it)
-      std::cout << ' ' << *it;
-    std::cout << '\n';
-  }
+  //   std::vector<int>::reverse_iterator rit = myvector.rbegin();
+  //   for (; rit != myvector.rend(); ++rit)
+  //     *rit = ++i;
+
+  //   std::cout << "myvector contains:";
+  //   for (std::vector<int>::iterator it = myvector.begin(); it != myvector.end(); ++it)
+  //     std::cout << ' ' << *it;
+  //   std::cout << '\n';
+  // }
+  // std::cout << "hello\n";
+  // {
+  //   ft::vector<int> myvector(5); // 5 default-constructed ints
+
+  //   int i = 0;
+
+  //   ft::vector<int>::reverse_iterator rit = myvector.rbegin();
+  //   for (; rit != myvector.rend(); ++rit)
+  //     *rit = ++i;
+
+  //   std::cout << "myvector contains:";
+  //   for (ft::vector<int>::iterator it = myvector.begin(); it != myvector.end(); ++it)
+  //     std::cout << ' ' << *it;
+  //   std::cout << '\n';
+  // }
 
   return 0;
 }

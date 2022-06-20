@@ -49,7 +49,7 @@ namespace ft
         {
         }
 
-        explicit vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()) : _capacity(), _size(0), p(NULL), allocc(alloc)
+        explicit vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()) : _capacity(0), _size(0), p(NULL), allocc(alloc)
         {
             if (n == 0)
                 p = NULL;
@@ -69,16 +69,29 @@ namespace ft
             (void)f;
             reserve(last - first);
             for (; first != last; first++)
-                p[_size++] = *first;
-            // ft::vector<value_type> vec;
-            // while (first != last)
-            // {
-            //     vec.push_back(*first);
-            //     first++;
-            // }
-            // if(vec.size() != 0)
-            //     insert(begin(), vec.begin(), vec.end());
-            // vec.clear();
+                allocc.construct(&p[_size++] , *first);
+            // // ft::vector<value_type> vec;
+            // // while (first != last)
+            // // {
+            // //     vec.push_back(*first);
+            // //     first++;
+            // // }
+            // // if(vec.size() != 0)
+            // //     insert(begin(), vec.begin(), vec.end());
+            // // vec.clear();
+            //     ft::vector<value_type> tmp;
+            //     while (first != last)
+            //     {
+
+
+            //         tmp.push_back(*first);
+            //         first++;
+            //     }
+            // std::cout << "yoo\n";
+
+            //     if(tmp.size() != 0)
+            //         insert(begin(), tmp.begin(), tmp.end());
+            //     tmp.clear();
         }
 
         vector(const vector &x) : p(NULL), allocc(x.allocc)
@@ -96,7 +109,7 @@ namespace ft
             _capacity = x._capacity;
             p = allocc.allocate(_capacity);
             for (i = 0; i < _size; i++)
-                p[i] = x.p[i];
+                allocc.construct(&p[i], x.p[i]);
             return (*this);
         }
         /*---------------------------- Destructor -------------------------*/
@@ -133,28 +146,21 @@ namespace ft
                 return 0;
         }
 
-        void reserve(size_type n)
+        void    reserve (size_type n)
         {
-            // pointer tmp;
-            size_type i;
-            if (n > max_size())
-                throw std::length_error("length error");
-            else if (n > _capacity)
+            if (n > _capacity)
             {
-                if (n == 0)
-                    std::cout << "capa : " << _capacity << std::endl;
-                pointer tmp = allocc.allocate(n);
-                for (i = 0; i < _size; i++)
-                    tmp[i] = p[i];
-                allocc.deallocate(p, _size);
-                p = tmp;
+                pointer tmp = p;
+                p = allocc.allocate(n);
+                if (tmp != NULL)
+                {
+                    for (size_type i = 0; i < _size; i++)
+                        allocc.construct(p + i, tmp[i]);
+                    allocc.deallocate(tmp, _capacity);
+                }
                 _capacity = n;
             }
-
-            if (n == 0)
-                _capacity = 0;
         }
-
         void resize(size_type n, value_type val = value_type())
         {
             size_type i;
@@ -168,7 +174,6 @@ namespace ft
             }
             else if (n > _capacity)
             {
-
                 if (n > (_capacity * 2))
                     reserve(n);
                 else
@@ -185,9 +190,6 @@ namespace ft
 
         reference at(size_type n)
         {
-            // if (n < _size)
-            //     return (p[n]);
-            // throw outofbounds();
             if (n >= _size)
                 throw std::out_of_range("vector");
             return (p[n]);
@@ -195,9 +197,6 @@ namespace ft
 
         const_reference at(size_type _n) const
         {
-            // if (_n < _size)
-            // 	return (p[_n]);
-            // throw outofbounds();
             if (_n >= _size)
                 throw std::out_of_range("vector");
             return (p[_n]);
@@ -243,11 +242,6 @@ namespace ft
 
         void swap(vector &x)
         {
-            // vector  tmp;
-
-            // tmp = *this;
-            // *this = x;
-            // x = tmp;
             pointer tmparr;
             size_type tmpcapacity;
             size_type tmpsize;
@@ -267,11 +261,13 @@ namespace ft
 
         void push_back(const value_type &val)
         {
-            if (_size + 1 > _capacity)
-                reserve(!_capacity ? 1 : _capacity * 2);
-            // p[_size++] = val;
-            allocc.construct((p + _size), val);
-            _size++;
+                if (_size == 0)
+                    reserve(1);
+                else if (_size == _capacity)
+                    reserve(_capacity * 2);
+                allocc.construct(p + _size, val);
+                _size++;
+    
         }
 
         void pop_back()
@@ -320,21 +316,11 @@ namespace ft
 
         iterator erase(iterator first, iterator last)
         {
-            size_type i = 0;
-            size_type j = 0;
-            size_type n = first - this->begin();
-            size_type a = last - first;
-            while (i < n)
-                i++;
-            n = this->size() - a;
-            while (j < n)
-            {
-                p[i] = p[i + a];
-                i++;
-                j++;
-            }
-            _size -= a;
-            return (first);
+            size_type n = last - first;
+            for (size_type i = first - p; i < _size - n; ++i)
+                allocc.construct(&p[i] , p[i + n]);
+            _size -= n;
+            return first;
         }
 
         iterator insert(iterator position, const value_type &val)
@@ -351,11 +337,11 @@ namespace ft
                 {
                     if (_size - i == o)
                     {
-                        p[_size - i] = val;
+                        allocc.construct(&p[_size - i] , val);
                         break;
                     }
                     else
-                        p[_size - i] = p[_size - i - 1];
+                        allocc.construct(&p[_size - i] , p[_size - i - 1]);
                     i++;
                 }
                 _size++;
@@ -368,20 +354,24 @@ namespace ft
             size_type o = position - this->begin();
             size_type i = 0;
             size_type k = n;
-            if (_size + n > _capacity * 2)
-                reserve(_size + n);
-            else
-                reserve(_capacity * 2);
+            if (_size + n > _capacity)
+            {
+                if (_size + n < _size * 2)
+                    reserve(!(_size )? 1 : (_size * 2));
+                else
+                    reserve(!(_size + n)? 1 : (_size + n ));
+
+            }
             while (_size - i + n > 0)
             {
                 if (_size - i == o)
                 {
                     while (k--)
-                        p[_size - i + k] = val;
+                        allocc.construct(&p[_size - i + k] , val);
                     break;
                 }
                 else
-                    p[_size - i + n - 1] = p[_size - i - 1];
+                    allocc.construct(&p[_size - i + n - 1] , p[_size - i - 1]);
                 i++;
             }
             _size += n;
@@ -392,7 +382,7 @@ namespace ft
                     typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type *f = NULL)
         {
             (void)f;
-            size_type n = last - first;
+            size_type n = std::distance(first, last);
             size_type i = 0;
             size_type pos = position - begin();
             if (_capacity < _size + n && n <= _size)
@@ -407,7 +397,7 @@ namespace ft
                     try
                     {
                         while (pos--)
-                            p[_size - i + pos] = *(--last);
+                           allocc.construct(&p[_size - i + pos], *(--last));
                     }
                     catch (...)
                     {
@@ -423,7 +413,7 @@ namespace ft
                     break;
                 }
                 else
-                    p[_size - i + n - 1] = p[_size - i - 1];
+                    allocc.construct(&p[_size - i + n - 1] ,  p[_size - i - 1]);
                 i++;
             }
             _size += n;
@@ -438,7 +428,7 @@ namespace ft
 
         const_iterator begin() const
         {
-            return (p);
+            return const_iterator(p);
         }
 
         iterator end()
@@ -448,7 +438,7 @@ namespace ft
 
         const_iterator end() const
         {
-            return (p + _size);
+            return const_iterator(p + _size);
         }
 
         reverse_iterator rbegin()

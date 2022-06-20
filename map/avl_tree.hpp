@@ -119,7 +119,7 @@ namespace ft
             return (__exists(_root, elem));
         }
 
-        avl_tree() : _root(NULL), _size(0), _compare(), _node_allocator(), _pair_allocator() {}
+        avl_tree() : _root(NULL), _size(0), _compare(), _pair_allocator(), _node_allocator() {}
 
         avl_tree(const avl_tree &other) : _root(NULL), _size(other._size)
         {

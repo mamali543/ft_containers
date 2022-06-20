@@ -299,14 +299,14 @@ namespace ft
             if (_tree.exists(k))
             {
                 node_type *tmp = _tree.search(_tree._root, k);
-                return (const_iterator(tmp, &_tree._root));
+                return (const_iterator(tmp, const_cast<node_type **>(&_tree._root)));
             }
             else
             {
                 if (_compare(k, min_node(_tree._root)->_data->first))
-                    return (const_iterator(min_node(_tree._root), &_tree._root));
+                    return (const_iterator(min_node(_tree._root), const_cast<node_type **>(&_tree._root)));
                 else if (_compare(max_node(_tree._root)->_data->first, k))
-                    return (const_iterator(NULL, &_tree._root));
+                    return (const_iterator(NULL, const_cast<node_type **>(&_tree._root)));
                 else
                 {
                     const_iterator it = begin();
@@ -355,15 +355,15 @@ namespace ft
             if (_tree.exists(k))
             {
                 node_type *tmp = _tree.search(_tree._root, k);
-                const_iterator it(tmp, &_tree._root);
+                const_iterator it(tmp, const_cast<node_type **>(&_tree._root));
                 return (++it);
             }
             else
             {
                 if (_compare(k, min_node(_tree._root)->_data->first))
-                    return (const_iterator(min_node(_tree._root), &_tree._root));
+                    return (const_iterator(min_node(_tree._root), const_cast<node_type **>(&_tree._root)));
                 else if (_compare(max_node(_tree._root)->_data->first, k))
-                    return (const_iterator(NULL, &_tree._root));
+                    return (const_iterator(NULL, const_cast<node_type **>(&_tree._root)));
                 else
                 {
                     const_iterator it = begin();

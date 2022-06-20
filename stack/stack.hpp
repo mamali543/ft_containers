@@ -20,6 +20,10 @@ namespace ft
 
     public:
         explicit stack(const container_type &container = container_type()) : _container(container) {}
+        stack const &operator= (stack const &x)  {
+         _container = x._container;
+            
+        }
         void push(const T &value) { _container.push_back(value); }
 
         void pop() { _container.pop_back(); }

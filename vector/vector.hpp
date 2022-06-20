@@ -45,6 +45,9 @@ namespace ft
         };
 
         /*---------------------------- Constructors -------------------------*/
+
+			//fill constructor, Constructs a container with n elements. Each element is a copy of val.
+
         explicit vector(const allocator_type &alloc = allocator_type()) : _capacity(0), _size(0), p(NULL), allocc(alloc)
         {
         }

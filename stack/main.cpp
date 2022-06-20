@@ -43,7 +43,7 @@ std::vector<int> constructor_test(ft::stack<T> stk)
 	ft::stack<int> stack(deque);
 	ft::stack<int> stack2(stk);
 	ft::stack<int> stack3;
-	stack3 = stack2;
+	// stack3 = stack2;
 	// g_end2 = timer();
 	while (stack.size() > 0)
 	{

@@ -288,7 +288,7 @@ namespace ft
                 _capacity = n;
             }
             for (size_type i = 0; i < n; ++i)
-                p[i] = x;
+                allocc.construct(&p[i] , x);
             _size = n;
         }
 
@@ -305,7 +305,7 @@ namespace ft
                 _capacity = n;
             }
             for (size_type i = 0; i < n; ++i)
-                p[i] = *first++;
+                allocc.construct(&p[i] , *first++);
             _size = n;
         }
 

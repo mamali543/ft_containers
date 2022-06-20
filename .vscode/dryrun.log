@@ -1,6 +1,6 @@
 make --dry-run --always-make --keep-going --print-directory
-make: Entering directory `/Users/mamali/Desktop/containers'
-make: Leaving directory `/Users/mamali/Desktop/containers'
+make: Entering directory `/Users/mamali/Desktop/con'
+make: Leaving directory `/Users/mamali/Desktop/con'
  
 make: *** No targets specified and no makefile found.  Stop.
 
